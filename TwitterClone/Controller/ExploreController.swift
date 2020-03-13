@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ExploreController.swift
 //  TwitterClone
 //
 //  Created by Krzysztof Podolak on 12/03/2020.
@@ -8,13 +8,11 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class ExploreController: RootViewController {
 
     override func viewDidLoad() {
+        navigationItemTitle = "Explore"
+        
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
     }
-
-
 }
-
