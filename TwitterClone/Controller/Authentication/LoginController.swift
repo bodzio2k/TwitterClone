@@ -50,7 +50,9 @@ class LoginController: UIViewController {
     }
     
     @objc func onSignup() {
-        return
+        let destinationController = RegistrationController()
+        
+        navigationController?.pushViewController(destinationController, animated: true)
     }
     
     //MARK: Lifecycle
@@ -73,6 +75,7 @@ class LoginController: UIViewController {
         let emailContainerView = Utilities.containerView(withImage: UIImage(systemName: "envelope"), for: emailTextField, placeholder: "Email")
         let passwpordContainerView = Utilities.containerView(withImage: UIImage(systemName: "lock"), for: passwordTextField, placeholder: "Password")
         passwordTextField.isSecureTextEntry = true
+        
         let stackView = UIStackView(arrangedSubviews: [emailContainerView, passwpordContainerView])
         stackView.axis = .vertical
         stackView.spacing = 8.0
