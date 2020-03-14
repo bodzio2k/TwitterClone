@@ -9,7 +9,7 @@
 import UIKit
 
 class LoginController: UIViewController {
-    //MARK: -Properties
+    //MARK: Properties
     let logoImageView: UIImageView = {
         let iv = UIImageView()
         
@@ -23,14 +23,44 @@ class LoginController: UIViewController {
     let emailTextField = UITextField()
     let passwordTextField = UITextField()
     
-    //MARK: -Lifecycle
+    let loginButton: UIButton = {
+        let b = UIButton(type: .system)
+        
+        b.setTitle("Log In", for: .normal)
+        b.setTitleColor(.twitterBlue, for: .normal)
+        b.backgroundColor = .white
+        b.layer.cornerRadius = 4.0
+        b.heightAnchor.constraint(equalToConstant: 50.0).isActive = true
+        b.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16.0)
+        b.addTarget(self, action: #selector(onLogin), for: .touchUpInside)
+        
+        return b
+    }()
+    
+    let signupButton: UIButton = {
+        let b = Utilities.attributedButton("Don't have account?", " Sign Up")
+        b.addTarget(self, action: #selector(onSignup), for: .touchUpInside)
+        
+        return b
+    }()
+    
+    //MARK Selectors
+    @objc func onLogin() {
+        return
+    }
+    
+    @objc func onSignup() {
+        return
+    }
+    
+    //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
         configureUI()
     }
     
-    //MARK: -Helpers
+    //MARK: Helpers
     func configureUI() {
         view.backgroundColor = .twitterBlue
         navigationController?.navigationBar.isHidden = true
@@ -42,13 +72,19 @@ class LoginController: UIViewController {
         
         let emailContainerView = Utilities.containerView(withImage: UIImage(systemName: "envelope"), for: emailTextField, placeholder: "Email")
         let passwpordContainerView = Utilities.containerView(withImage: UIImage(systemName: "lock"), for: passwordTextField, placeholder: "Password")
-        
+        passwordTextField.isSecureTextEntry = true
         let stackView = UIStackView(arrangedSubviews: [emailContainerView, passwpordContainerView])
         stackView.axis = .vertical
         stackView.spacing = 8.0
+        stackView.distribution = .fillEqually
         
         view.addSubview(stackView)
         stackView.anchor(top: logoImageView.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 8.0, paddingLeft: 8.0, paddingRight: 8.0)
         
+        view.addSubview(loginButton)
+        loginButton.anchor(top: stackView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 24.0, paddingLeft: 8.0, paddingRight: 8.0)
+
+        view.addSubview(signupButton)
+        signupButton.anchor(left: view.safeAreaLayoutGuide.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.safeAreaLayoutGuide.rightAnchor, paddingLeft: 8.0, paddingRight: 8.0)
     }
 }

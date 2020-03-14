@@ -36,4 +36,18 @@ class Utilities {
         
         return root
     }
+    
+    static func attributedButton(_ firstPhrase: String, _ secondPhrase: String) -> UIButton {
+        let b = UIButton(type: .system)
+        let boldAttrs = [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 16.0)]
+        let regularAttrs = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 16.0)]
+        
+        let attributedText = NSMutableAttributedString(string: firstPhrase, attributes: regularAttrs)
+        attributedText.append(NSAttributedString(string: secondPhrase, attributes: boldAttrs))
+        
+        b.setAttributedTitle(attributedText, for: .normal)
+        b.titleLabel?.textColor = .white
+        
+        return b
+    }
 }
