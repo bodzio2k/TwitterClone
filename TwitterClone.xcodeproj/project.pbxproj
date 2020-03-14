@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		DE599A5E241C0FFA000A73A4 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE599A5D241C0FFA000A73A4 /* RootViewController.swift */; };
 		DE599A60241C18D9000A73A4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE599A5F241C18D9000A73A4 /* Extensions.swift */; };
+		DE599A64241CDCFB000A73A4 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE599A63241CDCFB000A73A4 /* LoginController.swift */; };
+		DE599A66241CDDBA000A73A4 /* RegistrationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE599A65241CDDBA000A73A4 /* RegistrationController.swift */; };
+		DE599A68241CF827000A73A4 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE599A67241CF827000A73A4 /* Utilities.swift */; };
 		DE901769241AC00D0060F6CA /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE901768241AC00D0060F6CA /* AppDelegate.swift */; };
 		DE90176B241AC00D0060F6CA /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE90176A241AC00D0060F6CA /* SceneDelegate.swift */; };
 		DE901770241AC00D0060F6CA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DE90176E241AC00D0060F6CA /* Main.storyboard */; };
@@ -24,6 +27,9 @@
 /* Begin PBXFileReference section */
 		DE599A5D241C0FFA000A73A4 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		DE599A5F241C18D9000A73A4 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		DE599A63241CDCFB000A73A4 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
+		DE599A65241CDDBA000A73A4 /* RegistrationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationController.swift; sourceTree = "<group>"; };
+		DE599A67241CF827000A73A4 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 		DE901765241AC00D0060F6CA /* TwitterClone.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = TwitterClone.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE901768241AC00D0060F6CA /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		DE90176A241AC00D0060F6CA /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -49,6 +55,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		DE599A62241CDCE6000A73A4 /* Authentication */ = {
+			isa = PBXGroup;
+			children = (
+				DE599A63241CDCFB000A73A4 /* LoginController.swift */,
+				DE599A65241CDDBA000A73A4 /* RegistrationController.swift */,
+			);
+			path = Authentication;
+			sourceTree = "<group>";
+		};
 		DE90175C241AC00C0060F6CA = {
 			isa = PBXGroup;
 			children = (
@@ -100,6 +115,7 @@
 		DEEDDB96241AC24700B3FCC0 /* Controller */ = {
 			isa = PBXGroup;
 			children = (
+				DE599A62241CDCE6000A73A4 /* Authentication */,
 				DEEDDB99241AC3AB00B3FCC0 /* MainTabController.swift */,
 				DEEDDB9B241AC83B00B3FCC0 /* FeedController.swift */,
 				DEEDDB9D241AC85700B3FCC0 /* ExploreController.swift */,
@@ -121,6 +137,7 @@
 			isa = PBXGroup;
 			children = (
 				DE599A5F241C18D9000A73A4 /* Extensions.swift */,
+				DE599A67241CF827000A73A4 /* Utilities.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -202,9 +219,12 @@
 				DEEDDB9E241AC85700B3FCC0 /* ExploreController.swift in Sources */,
 				DEEDDB9C241AC83C00B3FCC0 /* FeedController.swift in Sources */,
 				DEEDDBA0241AC87900B3FCC0 /* NotificationsController.swift in Sources */,
+				DE599A68241CF827000A73A4 /* Utilities.swift in Sources */,
+				DE599A66241CDDBA000A73A4 /* RegistrationController.swift in Sources */,
 				DEEDDB9A241AC3AB00B3FCC0 /* MainTabController.swift in Sources */,
 				DE599A5E241C0FFA000A73A4 /* RootViewController.swift in Sources */,
 				DE90176B241AC00D0060F6CA /* SceneDelegate.swift in Sources */,
+				DE599A64241CDCFB000A73A4 /* LoginController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

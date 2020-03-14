@@ -13,13 +13,19 @@ class MainTabController: UITabBarController {
         let button = UIButton(type: .system)
         
         button.tintColor = .white
-        button.backgroundColor = .systemBlue
+        button.backgroundColor = .twitterBlue
         button.setImage(UIImage(systemName: "pencil"), for: .normal)
         button.layer.cornerRadius = 56 / 2
-        
+        button.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
         return button
     }()
     
+    //MARK: Selectors
+    @objc func actionButtonTapped() {
+        print("LOL")
+    }
+    
+    //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -27,6 +33,7 @@ class MainTabController: UITabBarController {
         configureActionButton()
     }
     
+    //MARK: Helpers
     func configureControllers() {
         let nav1 = templateNavigationController(rootViewControler: FeedController(), image: UIImage(systemName: "house"))
         let nav2 = templateNavigationController(rootViewControler: ExploreController(), image: UIImage(systemName: "number"))
