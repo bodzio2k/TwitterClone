@@ -10,6 +10,8 @@ import UIKit
 
 class RegistrationController: UIViewController {
     //MARK: -Properties
+    let imagePicker = UIImagePickerController()
+    
     let plusPhotoButton: UIButton = {
         let b = UIButton()
         
@@ -50,7 +52,7 @@ class RegistrationController: UIViewController {
     //MARK: -Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         configureUI()
     }
     
@@ -60,7 +62,7 @@ class RegistrationController: UIViewController {
     }
     
     @objc func onAddPhoto() {
-        return
+        present(imagePicker, animated: true, completion: nil)
     }
     
     @objc func onSignup() {
@@ -97,6 +99,27 @@ class RegistrationController: UIViewController {
         
         view.addSubview(alreadyHaveAccountButton)
         alreadyHaveAccountButton.anchor(left: view.safeAreaLayoutGuide.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.safeAreaLayoutGuide.rightAnchor, paddingLeft: 8.0, paddingRight: 8.0)
+        
+        imagePicker.delegate = self
+        imagePicker.allowsEditing = true
     }
     
+}
+
+//MARK: -UIImagePickerControllerDelegate
+extension RegistrationController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        guard let image = info[.editedImage] as? UIImage else {
+            return
+        }
+        
+        plusPhotoButton.setImage(image, for: .normal)
+        plusPhotoButton.imageView?.contentMode = .scaleAspectFill
+        plusPhotoButton.layer.cornerRadius = 128.0 / 2.0
+        plusPhotoButton.layer.masksToBounds = true
+        plusPhotoButton.layer.borderColor = UIColor.white.cgColor
+        plusPhotoButton.layer.borderWidth = 3.0
+        
+        dismiss(animated: true, completion: nil)
+    }
 }
