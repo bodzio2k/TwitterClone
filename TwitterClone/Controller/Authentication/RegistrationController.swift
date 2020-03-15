@@ -7,10 +7,12 @@
 //
 
 import UIKit
+import Firebase
 
 class RegistrationController: UIViewController {
     //MARK: -Properties
     let imagePicker = UIImagePickerController()
+    var profilePhoto: UIImage?
     
     let plusPhotoButton: UIButton = {
         let b = UIButton()
@@ -66,7 +68,45 @@ class RegistrationController: UIViewController {
     }
     
     @objc func onSignup() {
-        return
+        guard let email = emailTextField.text, let password = passwordTextField.text else {
+            return
+        }
+        
+        Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
+            if let _ = error {
+                return
+            }
+            
+            guard let uid = result?.user.uid else {
+                return
+            }
+            
+            guard let username = self.usernameTextField.text, let fullname = self.fullnameTextField.text else {
+                return
+            }
+            
+            let values = ["username": username, "fullname": fullname]
+            
+            USERS_REF.child(uid).updateChildValues(values) { (error, ref) in
+                if let _ = error {
+                    return
+                }
+                
+                return
+            }
+            
+            if let data = self.profilePhoto?.jpegData(compressionQuality: 0.3) {
+                PROFILE_IMAGES_REF.child(uid).putData(data, metadata: nil) { (meta, error) in
+                    if let _ = error {
+                        return
+                    }
+                    
+                    return
+                }
+            }
+            
+            return
+        }
     }
     
     //MARK: -Helpers
@@ -113,6 +153,7 @@ extension RegistrationController: UIImagePickerControllerDelegate, UINavigationC
             return
         }
         
+        profilePhoto = image
         plusPhotoButton.setImage(image, for: .normal)
         plusPhotoButton.imageView?.contentMode = .scaleAspectFill
         plusPhotoButton.layer.cornerRadius = 128.0 / 2.0
