@@ -68,44 +68,20 @@ class RegistrationController: UIViewController {
     }
     
     @objc func onSignup() {
-        guard let email = emailTextField.text, let password = passwordTextField.text else {
+        guard let email = emailTextField.text, let password = passwordTextField.text, let username = usernameTextField.text, let fullname = fullnameTextField.text, let profilePhoto = self.profilePhoto else {
             return
         }
         
-        Auth.auth().createUser(withEmail: email, password: password) { (result, error) in
-            if let _ = error {
-                return
-            }
-            
-            guard let uid = result?.user.uid else {
-                return
-            }
-            
-            guard let username = self.usernameTextField.text, let fullname = self.fullnameTextField.text else {
-                return
-            }
-            
-            let values = ["username": username, "fullname": fullname]
-            
-            USERS_REF.child(uid).updateChildValues(values) { (error, ref) in
-                if let _ = error {
-                    return
-                }
+        let newUser = AuthUser(email: email, username: username, fullname: fullname, password: password, profilePhoto: profilePhoto)
+        
+        AuthService.shared.register(newUser) { (error) in
+            if let error = error {
+                print(error.localizedDescription)
                 
                 return
             }
             
-            if let data = self.profilePhoto?.jpegData(compressionQuality: 0.3) {
-                PROFILE_IMAGES_REF.child(uid).putData(data, metadata: nil) { (meta, error) in
-                    if let _ = error {
-                        return
-                    }
-                    
-                    return
-                }
-            }
-            
-            return
+            print("Signup complete...")
         }
     }
     
