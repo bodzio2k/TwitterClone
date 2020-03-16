@@ -19,7 +19,11 @@ struct AuthUser {
 struct AuthService {
     static let shared = AuthService()
     
-    func register(_ newUser: AuthUser, completion: @escaping(Error?) -> Void) {
+    func signIn(withEmail email: String, password: String, completion: AuthDataResultCallback?) {
+        Auth.auth().signIn(withEmail: email, password: password, completion: completion)
+    }
+    
+    func createUser(_ newUser: AuthUser, completion: @escaping(Error?) -> Void) {
         Auth.auth().createUser(withEmail: newUser.email, password: newUser.password) { (result, error) in
             if let error = error {
                 completion(error)

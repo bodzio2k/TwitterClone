@@ -74,14 +74,25 @@ class RegistrationController: UIViewController {
         
         let newUser = AuthUser(email: email, username: username, fullname: fullname, password: password, profilePhoto: profilePhoto)
         
-        AuthService.shared.register(newUser) { (error) in
+        AuthService.shared.createUser(newUser) { (error) in
             if let error = error {
                 print(error.localizedDescription)
                 
                 return
             }
             
-            print("Signup complete...")
+            guard let keyWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else {
+                return
+            }
+            
+            guard let mainController = keyWindow.rootViewController as? MainTabController else {
+                return
+            }
+            
+            mainController.configureControllers()
+            mainController.configureActionButton()
+            
+            self.dismiss(animated: true, completion: nil)
         }
     }
     

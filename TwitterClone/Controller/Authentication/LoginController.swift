@@ -46,7 +46,28 @@ class LoginController: UIViewController {
     
     //MARK Selectors
     @objc func onLogin() {
-        return
+        guard let email = emailTextField.text, let password = passwordTextField.text else {
+            return
+        }
+        
+        AuthService.shared.signIn(withEmail: email, password: password) { (result, error) in
+            if let _  = error {
+                return
+            }
+            
+            guard let keyWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow == true }) else {
+                return
+            }
+            
+            guard let mainController = keyWindow.rootViewController as? MainTabController else {
+                return
+            }
+            
+            mainController.configureControllers()
+            mainController.configureActionButton()
+            
+            self.dismiss(animated: true, completion: nil)
+        }
     }
     
     @objc func onSignup() {

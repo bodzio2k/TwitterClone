@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import Firebase
 
 class MainTabController: UITabBarController {
+    //MARK: -Properties
     let actionButton: UIButton = {
         let button = UIButton(type: .system)
         
@@ -20,20 +22,39 @@ class MainTabController: UITabBarController {
         return button
     }()
     
-    //MARK: Selectors
+    //MARK: -Selectors
     @objc func actionButtonTapped() {
         print("LOL")
     }
     
-    //MARK: Lifecycle
+    //MARK: -Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        configureControllers()
-        configureActionButton()
+       
+        //try? Auth.auth().signOut()
+            
+        authenicateAndConfigureUI()
     }
     
-    //MARK: Helpers
+    //MARK: -API
+    func authenicateAndConfigureUI() {
+        let isLoggedIn = Auth.auth().currentUser != nil
+        
+        if !isLoggedIn {
+            DispatchQueue.main.async {
+                let nav = UINavigationController(rootViewController: LoginController())
+                
+                nav.modalPresentationStyle = .fullScreen
+                
+                self.present(nav, animated: true)
+            }
+        }
+        else {
+            configureControllers()
+            configureActionButton()
+        }
+    }
+    //MARK: -Helpers
     func configureControllers() {
         let nav1 = templateNavigationController(rootViewControler: FeedController(), image: UIImage(systemName: "house"))
         let nav2 = templateNavigationController(rootViewControler: ExploreController(), image: UIImage(systemName: "number"))
