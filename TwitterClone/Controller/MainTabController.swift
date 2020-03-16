@@ -52,6 +52,8 @@ class MainTabController: UITabBarController {
         else {
             configureControllers()
             configureActionButton()
+            
+            UserService.shared.fetchUser()
         }
     }
     //MARK: -Helpers

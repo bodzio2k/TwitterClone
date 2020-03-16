@@ -18,6 +18,8 @@
 		DE901770241AC00D0060F6CA /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DE90176E241AC00D0060F6CA /* Main.storyboard */; };
 		DE901772241AC0110060F6CA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DE901771241AC0110060F6CA /* Assets.xcassets */; };
 		DE901775241AC0110060F6CA /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DE901773241AC0110060F6CA /* LaunchScreen.storyboard */; };
+		DECD94F72420058F00E91AF8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD94F62420058F00E91AF8 /* User.swift */; };
+		DECD94F9242007ED00E91AF8 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD94F8242007ED00E91AF8 /* UserService.swift */; };
 		DEEDDB9A241AC3AB00B3FCC0 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEEDDB99241AC3AB00B3FCC0 /* MainTabController.swift */; };
 		DEEDDB9C241AC83C00B3FCC0 /* FeedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEEDDB9B241AC83B00B3FCC0 /* FeedController.swift */; };
 		DEEDDB9E241AC85700B3FCC0 /* ExploreController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEEDDB9D241AC85700B3FCC0 /* ExploreController.swift */; };
@@ -43,6 +45,8 @@
 		DE901771241AC0110060F6CA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		DE901774241AC0110060F6CA /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		DE901776241AC0110060F6CA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DECD94F62420058F00E91AF8 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
+		DECD94F8242007ED00E91AF8 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
 		DEEDDB99241AC3AB00B3FCC0 /* MainTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabController.swift; sourceTree = "<group>"; };
 		DEEDDB9B241AC83B00B3FCC0 /* FeedController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedController.swift; sourceTree = "<group>"; };
 		DEEDDB9D241AC85700B3FCC0 /* ExploreController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreController.swift; sourceTree = "<group>"; };
@@ -132,6 +136,7 @@
 		DEEDDB94241AC23900B3FCC0 /* Model */ = {
 			isa = PBXGroup;
 			children = (
+				DECD94F62420058F00E91AF8 /* User.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -161,6 +166,7 @@
 			isa = PBXGroup;
 			children = (
 				DEEFC09E241EC92A00BD6486 /* AuthService.swift */,
+				DECD94F8242007ED00E91AF8 /* UserService.swift */,
 			);
 			path = API;
 			sourceTree = "<group>";
@@ -299,9 +305,11 @@
 				DEEDDBA0241AC87900B3FCC0 /* NotificationsController.swift in Sources */,
 				DEEFC09D241EB6D600BD6486 /* Globals.swift in Sources */,
 				DE599A68241CF827000A73A4 /* Utilities.swift in Sources */,
+				DECD94F72420058F00E91AF8 /* User.swift in Sources */,
 				DE599A66241CDDBA000A73A4 /* RegistrationController.swift in Sources */,
 				DEEDDB9A241AC3AB00B3FCC0 /* MainTabController.swift in Sources */,
 				DE599A5E241C0FFA000A73A4 /* RootViewController.swift in Sources */,
+				DECD94F9242007ED00E91AF8 /* UserService.swift in Sources */,
 				DE90176B241AC00D0060F6CA /* SceneDelegate.swift in Sources */,
 				DE599A64241CDCFB000A73A4 /* LoginController.swift in Sources */,
 				DEEFC09F241EC92A00BD6486 /* AuthService.swift in Sources */,
