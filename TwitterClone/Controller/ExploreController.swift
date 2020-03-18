@@ -12,6 +12,7 @@ class ExploreController: RootViewController {
 
     override func viewDidLoad() {
         navigationItemTitle = "Explore"
+        leftBarButtonItem = UIBarButtonItem(customView: UIImageView(image: UIImage(systemName: "globe")))
         
         super.viewDidLoad()
     }

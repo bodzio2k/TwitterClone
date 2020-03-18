@@ -11,6 +11,8 @@ import UIKit
 class RootViewController: UIViewController {
     var navigationItemView: UIView?
     var navigationItemTitle: String?
+    var leftBarButtonItem: UIBarButtonItem?
+    var currentUser: User?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,6 +29,10 @@ class RootViewController: UIViewController {
         }
         else {
             navigationItem.title = navigationItemTitle ?? ""
+        }
+        
+        if let leftBarButtonItem = self.leftBarButtonItem {
+            navigationItem.leftBarButtonItem = leftBarButtonItem
         }
     }
 }
