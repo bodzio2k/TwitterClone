@@ -53,7 +53,21 @@ class MainTabController: UITabBarController {
             configureControllers()
             configureActionButton()
             
-            UserService.shared.fetchUser()
+            UserService.shared.fetchUser { user in
+                let _ = (self.viewControllers ?? []).map { (viewController) -> Void in
+                    guard let nav = viewController as? UINavigationController else {
+                        return
+                    }
+                    
+                    guard let vc = nav.viewControllers.first as? RootViewController else {
+                        return
+                    }
+                    
+                    vc.currentUser = user
+                    
+                    return
+                }
+            }
         }
     }
     //MARK: -Helpers
