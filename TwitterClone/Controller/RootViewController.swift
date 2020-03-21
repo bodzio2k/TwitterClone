@@ -12,7 +12,16 @@ class RootViewController: UIViewController {
     var navigationItemView: UIView?
     var navigationItemTitle: String?
     var leftBarButtonItem: UIBarButtonItem?
-    var currentUser: User?
+    var currentUser: User? {
+        didSet {
+            guard let newUser = currentUser, let profilePhotoURL = newUser.profilePhotoUrl else {
+                return
+            }
+            
+            leftBarButtonItem = UIBarButtonItem(customView: UIImageView(image: UIImage(systemName: "person.crop.circle")))
+            navigationItem.leftBarButtonItem = leftBarButtonItem
+        }
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -29,10 +38,6 @@ class RootViewController: UIViewController {
         }
         else {
             navigationItem.title = navigationItemTitle ?? ""
-        }
-        
-        if let leftBarButtonItem = self.leftBarButtonItem {
-            navigationItem.leftBarButtonItem = leftBarButtonItem
         }
     }
 }

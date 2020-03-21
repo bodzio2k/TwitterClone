@@ -63,8 +63,7 @@ class LoginController: UIViewController {
                 return
             }
             
-            mainController.configureControllers()
-            mainController.configureActionButton()
+            mainController.authenicateAndConfigureUI()
             
             self.dismiss(animated: true, completion: nil)
         }

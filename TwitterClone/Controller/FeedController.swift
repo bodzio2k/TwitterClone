@@ -12,8 +12,6 @@ class FeedController: RootViewController {
 
     override func viewDidLoad() {
         navigationItemView = UIImageView(image: UIImage(named: "twitter_logo_blue"))
-        leftBarButtonItem = UIBarButtonItem(customView: UIImageView(image: UIImage(systemName: "person.crop.circle")))
-        
-        super.viewDidLoad()
-    }
+
+        super.viewDidLoad()}    
 }

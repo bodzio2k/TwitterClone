@@ -19,6 +19,7 @@ class MainTabController: UITabBarController {
         button.setImage(UIImage(systemName: "pencil"), for: .normal)
         button.layer.cornerRadius = 56 / 2
         button.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
+        
         return button
     }()
     
