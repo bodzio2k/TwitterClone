@@ -51,26 +51,26 @@ struct AuthService {
                     PROFILE_IMAGES_REF.child(filename).downloadURL { (url, error) in
                         if let error = error {
                             completion(error)
-                                
-                                return
+                            
+                            return
                         }
                         
                         profilePhotoURL = url?.absoluteString ?? ""
+                        
+                        let values = ["username": newUser.username, "fullname": newUser.fullname, "profilePhotoURL": profilePhotoURL]
+                        
+                        USERS_REF.child(uid).updateChildValues(values) { (error, ref) in
+                            if let error = error {
+                                completion(error)
+                                
+                                return
+                            }
+                        }
+                        
+                        completion(nil)
                     }
                 }
             }
-            
-            let values = ["username": newUser.username, "fullname": newUser.fullname, "profilePhotoURL": profilePhotoURL]
-            
-            USERS_REF.child(uid).updateChildValues(values) { (error, ref) in
-                if let error = error {
-                    completion(error)
-                    
-                    return
-                }
-            }
-            
-            completion(nil)
         }
     }
 }
