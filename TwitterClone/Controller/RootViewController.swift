@@ -13,6 +13,7 @@ class RootViewController: UIViewController {
     var navigationItemView: UIView?
     var navigationItemTitle: String?
     var leftBarButtonItem: UIBarButtonItem?
+    var rightBarButtonItem: UIBarButtonItem?
     var profiePhotoImageView: UIImageView = UIImageView()
     var currentUser: User? {
         didSet {
@@ -56,5 +57,13 @@ class RootViewController: UIViewController {
         profiePhotoImageView.layer.cornerRadius = profilePhotoSize / 2.0
         profiePhotoImageView.layer.masksToBounds = true
         profiePhotoImageView.setDimensions(width: profilePhotoSize, height: profilePhotoSize)
+        
+        if let leftBarButtonItem = leftBarButtonItem {
+            navigationItem.leftBarButtonItem = leftBarButtonItem
+        }
+        
+        if let rightBarButtonItem = rightBarButtonItem {
+            navigationItem.rightBarButtonItem = rightBarButtonItem
+        }
     }
 }
