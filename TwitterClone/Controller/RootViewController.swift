@@ -13,6 +13,7 @@ class RootViewController: UIViewController {
     var navigationItemView: UIView?
     var navigationItemTitle: String?
     var leftBarButtonItem: UIBarButtonItem?
+    var profiePhotoImageView: UIImageView = UIImageView()
     var currentUser: User? {
         didSet {
             guard let newValue = currentUser, let profilePhotoURL = newValue.profilePhotoURL else {
@@ -20,17 +21,12 @@ class RootViewController: UIViewController {
             }
             
             let placeholderImage = UIImage(systemName: "person.crop.circle")
-            let imageView = UIImageView()
             
-            imageView.setDimensions(width: 32.0, height: 32.0)
-            imageView.contentMode = .scaleAspectFit
-            imageView.layer.cornerRadius = 32.0 / 2.0
-            imageView.layer.masksToBounds = true
-            imageView.sd_setImage(with: profilePhotoURL, placeholderImage: placeholderImage) { (image, error, cacheType, url) in
+            profiePhotoImageView.sd_setImage(with: profilePhotoURL, placeholderImage: placeholderImage) { (image, error, cacheType, url) in
                 return
             }
             
-            leftBarButtonItem = UIBarButtonItem(customView: imageView)
+            leftBarButtonItem = UIBarButtonItem(customView: profiePhotoImageView)
         
             navigationItem.leftBarButtonItem = leftBarButtonItem
         }
@@ -43,19 +39,22 @@ class RootViewController: UIViewController {
     }
     
     func configureUI() {
+        let profilePhotoSize: CGFloat = 32.0
         view.backgroundColor = .white
         
         if let imageView = navigationItemView {
             imageView.contentMode = .scaleAspectFit
+            imageView.setDimensions(width: 44.0, height: 44.0)
             imageView.sizeToFit()
             navigationItem.titleView = imageView
         }
         else {
             navigationItem.title = navigationItemTitle ?? ""
         }
-    }
-    
-    func configureLefBarItemButton() {
         
+        profiePhotoImageView.contentMode = .scaleAspectFit
+        profiePhotoImageView.layer.cornerRadius = profilePhotoSize / 2.0
+        profiePhotoImageView.layer.masksToBounds = true
+        profiePhotoImageView.setDimensions(width: profilePhotoSize, height: profilePhotoSize)
     }
 }
