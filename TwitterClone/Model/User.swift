@@ -14,7 +14,7 @@ struct User {
     let email: String
     let username: String
     let fullname: String
-    var profilePhotoUrl: URL?
+    var profilePhotoURL: URL?
     
     init(identifedBy uid: String, from dictionary: Dictionary<String, Any>) {
         self.uid = uid
@@ -22,7 +22,8 @@ struct User {
         email = dictionary["email"] as? String ?? ""
         username = dictionary["username"] as? String ?? ""
         fullname = dictionary["fullname"] as? String ?? ""
-        profilePhotoUrl = URL.init(fileURLWithPath: dictionary["fullname"] as? String ?? "")
+        profilePhotoURL = URL(string: dictionary["profilePhotoURL"] as? String ?? "")
         
+        return
     }
 }
