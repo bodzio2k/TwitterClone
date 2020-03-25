@@ -24,6 +24,16 @@ class NewTweetController: RootViewController {
     }()
     
     //MARK: Lifecycle
+    init(user: User) {
+        super.init(nibName: nil, bundle: nil)
+        
+        self.currentUser = user
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
     override func viewDidLoad() {
         leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(onCancel))
         rightBarButtonItem = UIBarButtonItem(customView: newTweetButton)

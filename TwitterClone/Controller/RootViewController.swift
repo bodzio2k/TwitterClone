@@ -17,6 +17,8 @@ class RootViewController: UIViewController {
     var profiePhotoImageView: UIImageView = UIImageView()
     var currentUser: User? {
         didSet {
+            print("User did set.")
+            
             guard let newValue = currentUser, let profilePhotoURL = newValue.profilePhotoURL else {
                 return
             }

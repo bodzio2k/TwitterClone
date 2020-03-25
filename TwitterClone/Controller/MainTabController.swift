@@ -25,10 +25,21 @@ class MainTabController: UITabBarController {
     
     //MARK: -Selectors
     @objc func actionButtonTapped() {
-        let newTweetController = NewTweetController()
-        let nav = UINavigationController(rootViewController: newTweetController)
+        guard let nav = selectedViewController as? UINavigationController else {
+            return
+        }
         
-        present(nav, animated: true)
+        guard let root = nav.viewControllers.first as? RootViewController else {
+            return
+        }
+        
+        let currentUser = root.currentUser!
+        
+        let newTweetController = NewTweetController(user: currentUser)
+        
+        let newNavStack = UINavigationController(rootViewController: newTweetController)
+        
+        present(newNavStack, animated: true)
     }
     
     //MARK: -Lifecycle
