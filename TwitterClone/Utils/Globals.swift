@@ -9,8 +9,9 @@
 import Foundation
 import Firebase
 
-let DB_REF = Database.database().reference()
-let USERS_REF = DB_REF.child("users")
+let databaseReference = Database.database().reference()
+let users = databaseReference.child("users")
+let tweets = databaseReference.child("tweets")
 
-let STORAGE_REF = Storage.storage().reference()
-let PROFILE_IMAGES_REF = STORAGE_REF.child("profile_images")
+let storageReference = Storage.storage().reference()
+let profileImages = storageReference.child("profile_images")
