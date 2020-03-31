@@ -23,4 +23,8 @@ struct TweetService {
         
         tweets.childByAutoId().updateChildValues(values, withCompletionBlock: completion)
     }
+    
+    func fetchTweets() -> Void {
+        return
+    }
 }

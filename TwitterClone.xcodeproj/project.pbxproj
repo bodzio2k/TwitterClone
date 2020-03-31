@@ -9,8 +9,10 @@
 /* Begin PBXBuildFile section */
 		D7A7B3F1033591F195F203E5 /* Pods_TwitterClone.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E42A21B9D87B850253AF9852 /* Pods_TwitterClone.framework */; };
 		DE222B702427B04D00C0095C /* NewTweetController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE222B6F2427B04D00C0095C /* NewTweetController.swift */; };
+		DE4288702433C72A007B762C /* TweetViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE42886F2433C72A007B762C /* TweetViewCell.swift */; };
 		DE48343F2430B47F00049ED1 /* CaptionTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE48343E2430B47F00049ED1 /* CaptionTextView.swift */; };
 		DE4834412430C7D900049ED1 /* TweetService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE4834402430C7D900049ED1 /* TweetService.swift */; };
+		DE4834432430EAAD00049ED1 /* Tweet.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE4834422430EAAD00049ED1 /* Tweet.swift */; };
 		DE599A5E241C0FFA000A73A4 /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE599A5D241C0FFA000A73A4 /* RootViewController.swift */; };
 		DE599A60241C18D9000A73A4 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE599A5F241C18D9000A73A4 /* Extensions.swift */; };
 		DE599A64241CDCFB000A73A4 /* LoginController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DE599A63241CDCFB000A73A4 /* LoginController.swift */; };
@@ -37,8 +39,10 @@
 		827DE7A199858A3725040E5A /* Pods-TwitterClone.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwitterClone.release.xcconfig"; path = "Target Support Files/Pods-TwitterClone/Pods-TwitterClone.release.xcconfig"; sourceTree = "<group>"; };
 		89B7D9A2C6A4EF86670FFCFC /* Pods-TwitterClone.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TwitterClone.debug.xcconfig"; path = "Target Support Files/Pods-TwitterClone/Pods-TwitterClone.debug.xcconfig"; sourceTree = "<group>"; };
 		DE222B6F2427B04D00C0095C /* NewTweetController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewTweetController.swift; sourceTree = "<group>"; };
+		DE42886F2433C72A007B762C /* TweetViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetViewCell.swift; sourceTree = "<group>"; };
 		DE48343E2430B47F00049ED1 /* CaptionTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptionTextView.swift; sourceTree = "<group>"; };
 		DE4834402430C7D900049ED1 /* TweetService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetService.swift; sourceTree = "<group>"; };
+		DE4834422430EAAD00049ED1 /* Tweet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tweet.swift; sourceTree = "<group>"; };
 		DE599A5D241C0FFA000A73A4 /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		DE599A5F241C18D9000A73A4 /* Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		DE599A63241CDCFB000A73A4 /* LoginController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginController.swift; sourceTree = "<group>"; };
@@ -97,6 +101,7 @@
 			isa = PBXGroup;
 			children = (
 				DE48343E2430B47F00049ED1 /* CaptionTextView.swift */,
+				DE42886F2433C72A007B762C /* TweetViewCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -152,6 +157,7 @@
 			isa = PBXGroup;
 			children = (
 				DECD94F62420058F00E91AF8 /* User.swift */,
+				DE4834422430EAAD00049ED1 /* Tweet.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -325,7 +331,9 @@
 				DEEFC09D241EB6D600BD6486 /* Globals.swift in Sources */,
 				DE599A68241CF827000A73A4 /* Utilities.swift in Sources */,
 				DECD94F72420058F00E91AF8 /* User.swift in Sources */,
+				DE4834432430EAAD00049ED1 /* Tweet.swift in Sources */,
 				DE599A66241CDDBA000A73A4 /* RegistrationController.swift in Sources */,
+				DE4288702433C72A007B762C /* TweetViewCell.swift in Sources */,
 				DE222B702427B04D00C0095C /* NewTweetController.swift in Sources */,
 				DEEDDB9A241AC3AB00B3FCC0 /* MainTabController.swift in Sources */,
 				DE599A5E241C0FFA000A73A4 /* RootViewController.swift in Sources */,

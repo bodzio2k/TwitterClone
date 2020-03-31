@@ -16,7 +16,7 @@ struct User {
     let fullname: String
     var profilePhotoURL: URL?
     
-    init(identifedBy uid: String, from dictionary: Dictionary<String, Any>) {
+    init(identifedBy uid: String, from dictionary: UserDictionary) {
         self.uid = uid
         
         email = dictionary["email"] as? String ?? ""
@@ -27,3 +27,6 @@ struct User {
         return
     }
 }
+
+
+typealias UserDictionary = Dictionary<String, Any>
