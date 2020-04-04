@@ -22,6 +22,7 @@ class FeedController: RootViewController {
         tweetsCollectionView = UICollectionView(frame: view.frame, collectionViewLayout: UICollectionViewFlowLayout())
         
         view.addSubview(tweetsCollectionView)
+        tweetsCollectionView.backgroundColor = .white
         tweetsCollectionView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingTop: 0.00, paddingLeft: 0.00, paddingBottom: 0.00, paddingRight: 0.00)
         
         tweetsCollectionView.delegate = self
@@ -56,5 +57,13 @@ extension FeedController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 5
+    }
+}
+
+extension FeedController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
+        let size = CGSize(width: view.frame.width, height: 100)
+        
+        return size
     }
 }
