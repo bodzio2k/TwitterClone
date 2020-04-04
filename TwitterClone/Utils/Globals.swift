@@ -9,9 +9,11 @@
 import Foundation
 import Firebase
 
-let databaseReference = Database.database().reference()
-let users = databaseReference.child("users")
-let tweets = databaseReference.child("tweets")
-
-let storageReference = Storage.storage().reference()
-let profileImages = storageReference.child("profile_images")
+struct Globals {
+    static let databaseReference = Database.database().reference()
+    static let users = databaseReference.child("users")
+    static let tweets = databaseReference.child("tweets")
+    
+    static let storageReference = Storage.storage().reference()
+    static let profileImages = storageReference.child("profile_images")
+}

@@ -9,15 +9,31 @@
 import UIKit
 
 class FeedController: RootViewController {
+    //MARK: Properties
     var tweetsCollectionView: UICollectionView!
     let cellIdentifier = "cellTweet"
+    var tweets = Array<Tweet>()
     
+    //MARK: Lifecycle
     override func viewDidLoad() {
         navigationItemView = UIImageView(image: UIImage(named: "twitter_logo_blue"))
 
         super.viewDidLoad()
+        
+        TweetService.shared.fetchTweets { (tweets, error) in
+            if let _ = error {
+                return
+            }
+            
+            if let tweets = tweets {
+                self.tweets = tweets
+            }
+            
+            self.tweetsCollectionView.reloadData()
+        }
     }
     
+    //MARK: Helpers
     fileprivate func configureCollectionView() {
         tweetsCollectionView = UICollectionView(frame: view.frame, collectionViewLayout: UICollectionViewFlowLayout())
         
@@ -38,10 +54,6 @@ class FeedController: RootViewController {
     }
 }
 
-extension FeedController: UICollectionViewDelegate {
-    
-}
-
 extension FeedController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellIdentifier, for: indexPath) as? TweetViewCell else {
@@ -56,7 +68,7 @@ extension FeedController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return tweets.count
     }
 }
 

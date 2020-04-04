@@ -41,14 +41,14 @@ struct AuthService {
             let filename = UUID().uuidString + ".jpeg"
             
             if let data = newUser.profilePhoto.jpegData(compressionQuality: 0.3) {
-                profileImages.child(filename).putData(data, metadata: nil) { (meta, error) in
+                Globals.profileImages.child(filename).putData(data, metadata: nil) { (meta, error) in
                     if let error = error {
                         completion(error)
                         
                         return
                     }
                     
-                    profileImages.child(filename).downloadURL { (url, error) in
+                    Globals.profileImages.child(filename).downloadURL { (url, error) in
                         if let error = error {
                             completion(error)
                             
@@ -59,7 +59,7 @@ struct AuthService {
                         
                         let values = ["username": newUser.username, "fullname": newUser.fullname, "profilePhotoURL": profilePhotoURL]
                         
-                        users.child(uid).updateChildValues(values) { (error, ref) in
+                        Globals.users.child(uid).updateChildValues(values) { (error, ref) in
                             if let error = error {
                                 completion(error)
                                 

@@ -26,6 +26,7 @@ class TweetViewCell: UICollectionViewCell {
     let headerLine: UILabel = {
         let l = UILabel()
         
+        l.font = UIFont.boldSystemFont(ofSize: 14.0)
         l.text = "Hi there"
         
         return l
@@ -34,6 +35,7 @@ class TweetViewCell: UICollectionViewCell {
     let tweetText: UILabel = {
         let l = UILabel()
         
+        l.font = UIFont.systemFont(ofSize: 12.0)
         l.text = "Hello there"
         
         return l
@@ -80,7 +82,7 @@ class TweetViewCell: UICollectionViewCell {
         var buttons = Array<UIView>()
         
         for j in 0..<4 {
-            let b = UIButton()
+            let b = UIButton(type: .system)
             var i: UIImage?
             var systemName: String!
             

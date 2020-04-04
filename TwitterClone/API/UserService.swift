@@ -16,7 +16,7 @@ struct UserService {
             return
         }
         
-        users.child(uid).observeSingleEvent(of: .value) { (snapshot) in
+        Globals.users.child(uid).observeSingleEvent(of: .value) { (snapshot) in
             guard let dictionary = snapshot.value as? Dictionary<String, Any> else {
                 return
             }

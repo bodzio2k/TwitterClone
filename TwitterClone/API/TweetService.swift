@@ -21,10 +21,22 @@ struct TweetService {
         
         let values = ["uid": uid, "caption": caption, "timeStamp": timestamp, "likes": 0, "retweets": 0] as [String : Any]
         
-        tweets.childByAutoId().updateChildValues(values, withCompletionBlock: completion)
+        Globals.tweets.childByAutoId().updateChildValues(values, withCompletionBlock: completion)
     }
     
-    func fetchTweets() -> Void {
-        return
+    func fetchTweets( completion: @escaping ([Tweet]?, Error?) -> Void) -> Void {
+        var tweets = Array<Tweet>()
+        
+        Globals.tweets.observe(.childAdded) { (snapshot) in
+            guard let tweetsDictionary = snapshot.value as? TweetDictionary else {
+                return
+            }
+            
+            let tweetId = snapshot.key
+            let tweet = Tweet(tweetId: tweetId, dictionary: tweetsDictionary)
+            tweets.append(tweet)
+            
+            completion(tweets, nil)
+        }
     }
 }
