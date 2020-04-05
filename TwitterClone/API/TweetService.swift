@@ -13,30 +13,39 @@ struct TweetService {
     static let shared = TweetService()
     
     func newTweet(caption: String, completion: @escaping (Error?, DatabaseReference) -> Void) {
-        guard let uid = Auth.auth().currentUser?.uid else {
+        guard let authorId = Auth.auth().currentUser?.uid else {
             return
         }
         
         let timestamp = Int(Date().timeIntervalSince1970)
         
-        let values = ["uid": uid, "caption": caption, "timeStamp": timestamp, "likes": 0, "retweets": 0] as [String : Any]
+        let values = ["authorId": authorId, "caption": caption, "timeStamp": timestamp, "likes": 0, "retweets": 0] as [String : Any]
         
         Globals.tweets.childByAutoId().updateChildValues(values, withCompletionBlock: completion)
     }
     
-    func fetchTweets( completion: @escaping ([Tweet]?, Error?) -> Void) -> Void {
+    func fetchTweets(completion: @escaping ([Tweet]?, Error?) -> Void) -> Void {
         var tweets = Array<Tweet>()
+        var author: User?
         
         Globals.tweets.observe(.childAdded) { (snapshot) in
             guard let tweetsDictionary = snapshot.value as? TweetDictionary else {
                 return
             }
             
-            let tweetId = snapshot.key
-            let tweet = Tweet(tweetId: tweetId, dictionary: tweetsDictionary)
-            tweets.append(tweet)
+            guard let authorId = tweetsDictionary["authorId"] as? String else {
+                return
+            }
             
-            completion(tweets, nil)
+            UserService.shared.fetchUser(identifiedBy: authorId) { user in
+                author = user
+                
+                let tweetId = snapshot.key
+                let tweet = Tweet(createdBy: author!, tweetId: tweetId, dictionary: tweetsDictionary)
+                tweets.append(tweet)
+                
+                completion(tweets, nil)
+            }
         }
     }
 }

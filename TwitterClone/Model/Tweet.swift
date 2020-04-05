@@ -9,17 +9,20 @@
 import Foundation
 
 struct Tweet {
-    let uid: String
+    let authorId: String
     let tweetId: String
     let timestamp: Date
     let caption: String
     let likes: Int
     let retweetes: Int
+    let author: User
     
-    init(tweetId: String, dictionary: TweetDictionary) {
+    init(createdBy user: User, tweetId: String, dictionary: TweetDictionary) {
         self.tweetId = tweetId
         
-        uid = dictionary["uid"] as? String ?? ""
+        author = user
+        
+        authorId = dictionary["authorId"] as? String ?? ""
         timestamp = Date(timeIntervalSince1970: dictionary["timestamp"] as? TimeInterval ?? 0)
         caption = dictionary["caption"] as? String ?? ""
         likes = dictionary["likes"] as? Int ?? 0

@@ -60,6 +60,9 @@ extension FeedController: UICollectionViewDataSource {
             fatalError()
         }
         
+        let tweet = tweets[indexPath.row]
+        cell.configure(for: tweet)
+        
         return cell
     }
     

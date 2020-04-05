@@ -11,10 +11,10 @@ import Firebase
 struct UserService {
     static let shared = UserService()
     
-    func fetchUser(completion: @escaping (User) -> Void) {
-        guard let uid = Auth.auth().currentUser?.uid else {
-            return
-        }
+    func fetchUser(identifiedBy uidToFetch: String? = nil, completion: @escaping (User) -> Void) {
+        var uid: String
+        
+        uid = uidToFetch ?? Auth.auth().currentUser?.uid ?? ""
         
         Globals.users.child(uid).observeSingleEvent(of: .value) { (snapshot) in
             guard let dictionary = snapshot.value as? Dictionary<String, Any> else {

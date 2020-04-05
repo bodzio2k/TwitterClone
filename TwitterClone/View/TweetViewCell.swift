@@ -23,7 +23,7 @@ class TweetViewCell: UICollectionViewCell {
         return iv
     }()
     
-    let headerLine: UILabel = {
+    let headerLineLabel: UILabel = {
         let l = UILabel()
         
         l.font = UIFont.boldSystemFont(ofSize: 14.0)
@@ -32,7 +32,7 @@ class TweetViewCell: UICollectionViewCell {
         return l
     }()
     
-    let tweetText: UILabel = {
+    let tweetCaptionLabel: UILabel = {
         let l = UILabel()
         
         l.font = UIFont.systemFont(ofSize: 12.0)
@@ -50,7 +50,7 @@ class TweetViewCell: UICollectionViewCell {
         addSubview(profiePhotoImageView)
         profiePhotoImageView.anchor(top: safeAreaLayoutGuide.topAnchor, left: leftAnchor, paddingTop: 8.0, paddingLeft: 12.0)
         
-        let tweetStack = UIStackView(arrangedSubviews: [headerLine, tweetText])
+        let tweetStack = UIStackView(arrangedSubviews: [headerLineLabel, tweetCaptionLabel])
         tweetStack.axis = .vertical
         tweetStack.distribution = .fillProportionally
         
@@ -107,4 +107,7 @@ class TweetViewCell: UICollectionViewCell {
         return buttons
     }
     
+    func configure(for tweet: Tweet) -> Void {
+        tweetCaptionLabel.text = tweet.caption
+    }    
 }
