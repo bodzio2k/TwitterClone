@@ -57,7 +57,7 @@ struct AuthService {
                         
                         profilePhotoURL = url?.absoluteString ?? ""
                         
-                        let values = ["username": newUser.username, "fullname": newUser.fullname, "profilePhotoURL": profilePhotoURL]
+                        let values = ["username": newUser.username.lowercased(), "fullname": newUser.fullname, "profilePhotoURL": profilePhotoURL]
                         
                         Globals.users.child(uid).updateChildValues(values) { (error, ref) in
                             if let error = error {
