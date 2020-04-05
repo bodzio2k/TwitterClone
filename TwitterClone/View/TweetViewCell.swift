@@ -10,7 +10,7 @@ import UIKit
 
 class TweetViewCell: UICollectionViewCell {
     //MARK: Properties
-    let profiePhotoImageView: UIImageView = {
+     let profiePhotoImageView: UIImageView = {
         let profilePhotoSize: CGFloat = 44.0
         let iv = UIImageView()
         
@@ -108,6 +108,10 @@ class TweetViewCell: UICollectionViewCell {
     }
     
     func configure(for tweet: Tweet) -> Void {
+        let viewModel = TweetViewModel(tweet: tweet)
+        
+        profiePhotoImageView.sd_setImage(with: viewModel.profilePhotoURL)
+        headerLineLabel.attributedText = viewModel.headerLine
         tweetCaptionLabel.text = tweet.caption
     }    
 }
