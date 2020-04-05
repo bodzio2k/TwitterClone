@@ -19,7 +19,7 @@ struct TweetService {
         
         let timestamp = Int(Date().timeIntervalSince1970)
         
-        let values = ["authorId": authorId, "caption": caption, "timeStamp": timestamp, "likes": 0, "retweets": 0] as [String : Any]
+        let values = ["authorId": authorId, "caption": caption, "timestamp": timestamp, "likes": 0, "retweets": 0] as [String : Any]
         
         Globals.tweets.childByAutoId().updateChildValues(values, withCompletionBlock: completion)
     }
