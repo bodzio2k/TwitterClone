@@ -8,9 +8,15 @@
 
 import UIKit
 
+protocol TweetCellDelegate: class {
+    func profilePhotoImageViewTapped()
+}
+
 class TweetViewCell: UICollectionViewCell {
     //MARK: Properties
-     let profiePhotoImageView: UIImageView = {
+    weak var delegate: TweetCellDelegate?
+    
+     lazy var profiePhotoImageView: UIImageView = {
         let profilePhotoSize: CGFloat = 44.0
         let iv = UIImageView()
         
@@ -20,6 +26,10 @@ class TweetViewCell: UICollectionViewCell {
         iv.setDimensions(width: profilePhotoSize, height: profilePhotoSize)
         iv.backgroundColor = .twitterBlue
         
+        let tap = UITapGestureRecognizer(target: self, action: #selector(profilePhotoImageViewTapped))
+        iv.addGestureRecognizer(tap)
+        iv.isUserInteractionEnabled = true
+        
         return iv
     }()
     
@@ -27,7 +37,6 @@ class TweetViewCell: UICollectionViewCell {
         let l = UILabel()
         
         l.font = UIFont.boldSystemFont(ofSize: 14.0)
-        l.text = "Hi there"
         
         return l
     }()
@@ -36,7 +45,7 @@ class TweetViewCell: UICollectionViewCell {
         let l = UILabel()
         
         l.font = UIFont.systemFont(ofSize: 12.0)
-        l.text = "Hello there"
+        l.numberOfLines = 0
         
         return l
     }()
@@ -113,5 +122,10 @@ class TweetViewCell: UICollectionViewCell {
         profiePhotoImageView.sd_setImage(with: viewModel.profilePhotoURL)
         headerLineLabel.attributedText = viewModel.headerLine
         tweetCaptionLabel.text = tweet.caption
-    }    
+    }
+    
+    //MARK: Selectors
+    @objc func profilePhotoImageViewTapped() {
+        delegate?.profilePhotoImageViewTapped()
+    }
 }
