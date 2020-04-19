@@ -60,6 +60,8 @@ extension FeedController: UICollectionViewDataSource {
             fatalError()
         }
         
+        cell.delegate = self
+        
         let tweet = tweets[indexPath.row]
         cell.configure(for: tweet)
         
@@ -80,5 +82,13 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
         let size = CGSize(width: view.frame.width, height: 100)
         
         return size
+    }
+}
+
+extension FeedController: TweetCellDelegate {
+    func profilePhotoImageViewTapped() {
+        let profileController = ProfileController()
+        
+        navigationController?.pushViewController(profileController, animated: true)
     }
 }
