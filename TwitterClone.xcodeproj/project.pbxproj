@@ -26,6 +26,8 @@
 		DEA4A7E42439D8A900EA3180 /* TweetViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEA4A7E32439D8A900EA3180 /* TweetViewModel.swift */; };
 		DECD94F72420058F00E91AF8 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD94F62420058F00E91AF8 /* User.swift */; };
 		DECD94F9242007ED00E91AF8 /* UserService.swift in Sources */ = {isa = PBXBuildFile; fileRef = DECD94F8242007ED00E91AF8 /* UserService.swift */; };
+		DEE21A92244AF3340036193F /* ProfileController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE21A91244AF3340036193F /* ProfileController.swift */; };
+		DEE21A94244F5FBB0036193F /* ProfileHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEE21A93244F5FBB0036193F /* ProfileHeader.swift */; };
 		DEEDDB9A241AC3AB00B3FCC0 /* MainTabController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEEDDB99241AC3AB00B3FCC0 /* MainTabController.swift */; };
 		DEEDDB9C241AC83C00B3FCC0 /* FeedController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEEDDB9B241AC83B00B3FCC0 /* FeedController.swift */; };
 		DEEDDB9E241AC85700B3FCC0 /* ExploreController.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEEDDB9D241AC85700B3FCC0 /* ExploreController.swift */; };
@@ -59,6 +61,8 @@
 		DEA4A7E32439D8A900EA3180 /* TweetViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TweetViewModel.swift; sourceTree = "<group>"; };
 		DECD94F62420058F00E91AF8 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		DECD94F8242007ED00E91AF8 /* UserService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserService.swift; sourceTree = "<group>"; };
+		DEE21A91244AF3340036193F /* ProfileController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileController.swift; sourceTree = "<group>"; };
+		DEE21A93244F5FBB0036193F /* ProfileHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileHeader.swift; sourceTree = "<group>"; };
 		DEEDDB99241AC3AB00B3FCC0 /* MainTabController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabController.swift; sourceTree = "<group>"; };
 		DEEDDB9B241AC83B00B3FCC0 /* FeedController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FeedController.swift; sourceTree = "<group>"; };
 		DEEDDB9D241AC85700B3FCC0 /* ExploreController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExploreController.swift; sourceTree = "<group>"; };
@@ -104,6 +108,7 @@
 			children = (
 				DE48343E2430B47F00049ED1 /* CaptionTextView.swift */,
 				DE42886F2433C72A007B762C /* TweetViewCell.swift */,
+				DEE21A93244F5FBB0036193F /* ProfileHeader.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -182,6 +187,7 @@
 				DEEDDB9F241AC87900B3FCC0 /* NotificationsController.swift */,
 				DEEDDBA1241AC89B00B3FCC0 /* ConversationsController.swift */,
 				DE599A5D241C0FFA000A73A4 /* RootViewController.swift */,
+				DEE21A91244AF3340036193F /* ProfileController.swift */,
 				DE222B6F2427B04D00C0095C /* NewTweetController.swift */,
 			);
 			path = Controller;
@@ -331,7 +337,9 @@
 				DEEDDB9C241AC83C00B3FCC0 /* FeedController.swift in Sources */,
 				DEEDDBA0241AC87900B3FCC0 /* NotificationsController.swift in Sources */,
 				DE48343F2430B47F00049ED1 /* CaptionTextView.swift in Sources */,
+				DEE21A94244F5FBB0036193F /* ProfileHeader.swift in Sources */,
 				DEEFC09D241EB6D600BD6486 /* Globals.swift in Sources */,
+				DEE21A92244AF3340036193F /* ProfileController.swift in Sources */,
 				DE599A68241CF827000A73A4 /* Utilities.swift in Sources */,
 				DECD94F72420058F00E91AF8 /* User.swift in Sources */,
 				DE4834432430EAAD00049ED1 /* Tweet.swift in Sources */,
