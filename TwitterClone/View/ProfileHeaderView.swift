@@ -8,8 +8,11 @@
 
 import UIKit
 
-class ProfileHeader: UICollectionReusableView {
+class ProfileHeaderView: UICollectionReusableView {
     //MARK: Properties
+    var followingCount = 0
+    var followersCount = 0
+    
     let dissmisalButton: UIButton = {
         let b = UIButton(type: UIButton.ButtonType.system)
         let i = UIImage(systemName: "arrow.left")?.withTintColor(.white).withRenderingMode(.alwaysOriginal)
@@ -52,7 +55,7 @@ class ProfileHeader: UICollectionReusableView {
         return b
     }()
     
-    let profileName: UILabel = {
+    let profileNameLabel: UILabel = {
         let l = UILabel()
         
         l.text = "Eddie Brock"
@@ -61,7 +64,7 @@ class ProfileHeader: UICollectionReusableView {
         return l
     }()
     
-    let username: UILabel = {
+    let usernameLabel: UILabel = {
         let l = UILabel()
         
         l.text = "@Eddie_Brock".lowercased()
@@ -71,7 +74,7 @@ class ProfileHeader: UICollectionReusableView {
         return l
     }()
     
-    let bio: UILabel = {
+    let bioLabel: UILabel = {
         let l = UILabel()
         
         l.text = "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."
@@ -81,11 +84,45 @@ class ProfileHeader: UICollectionReusableView {
         return l
     }()
     
+    lazy var folowingLabel: UILabel = {
+        let l = UILabel()
+        let grayedTextAttrs = [NSAttributedString.Key.foregroundColor: UIColor.lightGray]
+        let normalTextAttrs = [NSAttributedString.Key.foregroundColor: UIColor.black]
+        let followingString = NSAttributedString(string: " Following ", attributes: grayedTextAttrs)
+        let followingCount = NSAttributedString(string: "\(self.followingCount)", attributes: normalTextAttrs)
+        let followersCount = NSAttributedString(string: "\(self.followersCount)", attributes: normalTextAttrs)
+        let followersString = NSAttributedString(string: "Followers ", attributes: grayedTextAttrs)
+        var finalTextOutput = NSMutableAttributedString()
+        
+        finalTextOutput.append(followersString)
+        finalTextOutput.append(followersCount)
+        finalTextOutput.append(followingString)
+        finalTextOutput.append(followingCount)
+        
+        l.attributedText = finalTextOutput
+        l.font = UIFont.systemFont(ofSize: 12.0)
+        l.numberOfLines = 0
+        
+        return l
+    }()
+    
+    let filterView = ProfileFilterView()
+    
+    let underlineView: UIView = {
+        let v = UIView()
+        
+        v.backgroundColor = .twitterBlue
+        
+        return v
+    }()
+    
     //MARK: Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
     
         configureUI()
+        
+        filterView.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -110,13 +147,34 @@ class ProfileHeader: UICollectionReusableView {
         followButton.setDimensions(width: 128, height: 32.0)
         followButton.layer.cornerRadius = 16.0
         
-        addSubview(profileName)
-        profileName.anchor(top: profileImageView.bottomAnchor, left: leftAnchor, paddingTop: 8.0, paddingLeft: 16.0)
+        addSubview(profileNameLabel)
+        profileNameLabel.anchor(top: profileImageView.bottomAnchor, left: leftAnchor, paddingTop: 8.0, paddingLeft: 16.0)
     
-        addSubview(username)
-        username.anchor(top: profileName.bottomAnchor, left: leftAnchor, paddingLeft: 16.0)
+        addSubview(usernameLabel)
+        usernameLabel.anchor(top: profileNameLabel.bottomAnchor, left: leftAnchor, paddingLeft: 16.0)
      
-        addSubview(bio)
-        bio.anchor(top: username.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 8.0, paddingLeft: 16.0, paddingRight: 16.0)
+        addSubview(bioLabel)
+        bioLabel.anchor(top: usernameLabel.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 8.0, paddingLeft: 16.0, paddingRight: 16.0)
+        
+        addSubview(folowingLabel)
+        folowingLabel.anchor(top: bioLabel.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 8.0, paddingLeft: 16.0, paddingRight: 16.0)
+        
+        addSubview(filterView)
+        filterView.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, height: 50.0)
+        
+        addSubview(underlineView)
+        underlineView.anchor(left: leftAnchor, bottom: bottomAnchor, width: frame.width / 3.0, height: 2.0)
+    }
+}
+
+extension ProfileHeaderView: ProfileFilterViewDelegate {
+    func profileFilterView(_ filterView: ProfileFilterView, didSelectItemAt indexPath: IndexPath) {
+        guard let cell = filterView.filterCollectionView.cellForItem(at: indexPath) as? ProfileFilterCell else {
+            return
+        }
+        
+        UIView.animate(withDuration: 0.3) {
+            self.underlineView.frame.origin.x = cell.frame.origin.x
+        }
     }
 }
