@@ -9,14 +9,15 @@
 import UIKit
 
 protocol TweetCellDelegate: class {
-    func profilePhotoImageViewTapped()
+    func profilePhotoImageViewTapped(at cell: TweetViewCell)
 }
 
 class TweetViewCell: UICollectionViewCell {
     //MARK: Properties
     weak var delegate: TweetCellDelegate?
+    var tweet: Tweet?
     
-     lazy var profiePhotoImageView: UIImageView = {
+    lazy var profiePhotoImageView: UIImageView = {
         let profilePhotoSize: CGFloat = 44.0
         let iv = UIImageView()
         
@@ -117,6 +118,8 @@ class TweetViewCell: UICollectionViewCell {
     }
     
     func configure(for tweet: Tweet) -> Void {
+        self.tweet = tweet
+        
         let viewModel = TweetViewModel(tweet: tweet)
         
         profiePhotoImageView.sd_setImage(with: viewModel.profilePhotoURL)
@@ -126,6 +129,6 @@ class TweetViewCell: UICollectionViewCell {
     
     //MARK: Selectors
     @objc func profilePhotoImageViewTapped() {
-        delegate?.profilePhotoImageViewTapped()
+        delegate?.profilePhotoImageViewTapped(at: self)
     }
 }

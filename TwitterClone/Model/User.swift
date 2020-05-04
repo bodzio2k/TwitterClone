@@ -8,6 +8,7 @@
 
 import Foundation
 import UIKit
+import Firebase
 
 struct User {
     let uid: String
@@ -15,6 +16,9 @@ struct User {
     let username: String
     let fullname: String
     var profilePhotoURL: URL?
+    var isCurrentUser: Bool {
+        return Auth.auth().currentUser?.uid == uid
+    }
     
     init(identifedBy uid: String, from dictionary: UserDictionary) {
         self.uid = uid

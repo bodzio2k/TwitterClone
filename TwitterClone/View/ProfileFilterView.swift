@@ -15,6 +15,7 @@ protocol ProfileFilterViewDelegate: class {
 class ProfileFilterView: UIView {
     //MARK: Properties
     let reuseIdentifier = "ProfileFilterCell"
+    let optionCount = ProfileFilterOption.allCases.count
     weak var delegate: ProfileFilterViewDelegate?
     
     lazy var filterCollectionView: UICollectionView = {
@@ -22,6 +23,7 @@ class ProfileFilterView: UIView {
         let cv = UICollectionView(frame: .zero, collectionViewLayout: layout)
         
         cv.isUserInteractionEnabled = true
+        cv.backgroundColor = .white
         
         cv.register(ProfileFilterCell.self, forCellWithReuseIdentifier: reuseIdentifier)
         
@@ -49,35 +51,21 @@ class ProfileFilterView: UIView {
 extension ProfileFilterView: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: reuseIdentifier, for: indexPath) as! ProfileFilterCell
-        var caption: String!
-        var isSelected = false
         
-        switch indexPath.row {
-        case 0:
-            caption = "Tweets"
-            isSelected = true
-        case 1:
-            caption = "Tweets & replies"
-        case 2:
-            caption = "Likes"
-        default:
-            caption = "-----"
-        }
-        
-        cell.captionLabel.text = caption
-        cell.isSelected = isSelected
+        let option = ProfileFilterOption(rawValue: indexPath.row)
+        cell.captionLabel.text = option?.description
         
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return optionCount
     }
 }
 
 extension ProfileFilterView: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: frame.width / 3.0, height: frame.height)
+        return CGSize(width: frame.width / CGFloat(optionCount), height: frame.height)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
