@@ -10,6 +10,7 @@ import UIKit
 
 protocol ProfileHeaderViewDelegate {
     func dismiss()
+    func actionButtonTapped(_ user: User)
 }
 
 class ProfileHeaderView: UICollectionReusableView {
@@ -23,6 +24,8 @@ class ProfileHeaderView: UICollectionReusableView {
             }
             
             let viewModel = ProfileHeaderViewModel(user: user)
+            
+            actionButton.setTitle(viewModel.actionButtonTitle, for: .normal)
             
             followingLabel.attributedText = viewModel.following
             followersLabel.attributedText = viewModel.followers
@@ -75,6 +78,7 @@ class ProfileHeaderView: UICollectionReusableView {
         b.backgroundColor = .white
         b.layer.borderWidth = 1.25
         b.layer.borderColor = UIColor.twitterBlue.cgColor
+        b.addTarget(self, action: #selector(actionButtonTapped), for: .touchUpInside)
         
         return b
     }()
@@ -155,6 +159,13 @@ class ProfileHeaderView: UICollectionReusableView {
     @objc func dismiss() {
         delegate?.dismiss()
     }
+    
+    @objc func actionButtonTapped() {
+        if let user = user {
+            delegate?.actionButtonTapped(user)
+        }
+    }
+    
     
     //MARK: Helpers
     func configureUI() {

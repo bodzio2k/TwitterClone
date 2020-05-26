@@ -14,6 +14,7 @@ class ProfileController: RootViewController {
     let cellIdentifier = "cellTweet"
     let headerIdentifer = "profileHeader"
     var user: User
+    var tweets: [Tweet]?
     
     //MARK: Lifecycle
     init(user: User) {
@@ -26,20 +27,19 @@ class ProfileController: RootViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
-    
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.barStyle = .black
     }
+    
     //MARK: Helpers
     override func configureUI() {
         super.configureUI()
         
         configureCollectionView()
+        fetchTweets()
+        checkIsUserFollowed()
     }
     
     fileprivate func configureCollectionView() {
@@ -55,6 +55,25 @@ class ProfileController: RootViewController {
         tweetsCollectionView.register(TweetViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
         tweetsCollectionView.register(ProfileHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdentifer)
     }
+    
+    //MARK: API calls
+    func fetchTweets() -> Void {
+        TweetService.shared.fetchTweets(for: user) { (tweets, err) in
+            self.tweets = tweets
+            self.tweetsCollectionView.reloadData()
+        }
+    }
+    
+    func checkIsUserFollowed() -> Void {
+        guard UserService.currentUserUid != user.uid else {
+            return
+        }
+        
+        UserService.shared.isFollowed(user) { (isFollowed) in
+            self.user.isFollowed = isFollowed
+            self.tweetsCollectionView.reloadData()
+        }
+    }
 }
 
 extension ProfileController: UICollectionViewDataSource {
@@ -63,10 +82,11 @@ extension ProfileController: UICollectionViewDataSource {
             fatalError()
         }
         
-        //cell.delegate = self
-        
-        //let tweet = tweets[indexPath.row]
-        //cell.configure(for: tweet)
+//        cell.delegate = self
+//
+        if let tweet = tweets?[indexPath.row] {
+            cell.configure(for: tweet)
+        }
         
         return cell
     }
@@ -76,7 +96,7 @@ extension ProfileController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 3
+        return tweets?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -106,6 +126,25 @@ extension ProfileController: UICollectionViewDelegateFlowLayout {
 }
 
 extension ProfileController: ProfileHeaderViewDelegate {
+    func actionButtonTapped(_ user: User) {
+        if user.isFollowed {
+            UserService.shared.unfollow(user) { (err, ref) in
+                if let err = err {
+                    fatalError(err.localizedDescription)
+                }
+            }
+        } else {
+            UserService.shared.follow(user) { (err, ref) in
+                if let err = err {
+                    fatalError(err.localizedDescription)
+                }
+            }
+        }
+        
+        self.user.isFollowed.toggle()
+        tweetsCollectionView.reloadData()
+    }
+    
     func dismiss() {
         navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.barStyle = .default

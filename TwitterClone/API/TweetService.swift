@@ -21,7 +21,15 @@ struct TweetService {
         
         let values = ["authorId": authorId, "caption": caption, "timestamp": timestamp, "likes": 0, "retweets": 0] as [String : Any]
         
-        Globals.tweets.childByAutoId().updateChildValues(values, withCompletionBlock: completion)
+        let tweetRef = Globals.tweets.childByAutoId()
+        
+        tweetRef.updateChildValues(values) { (err, ref) in
+            guard let tweetId = tweetRef.key else {
+                return
+            }
+            
+            Globals.userTweets.child(authorId).updateChildValues([tweetId: 1], withCompletionBlock: completion)
+        }
     }
     
     func fetchTweets(completion: @escaping ([Tweet]?, Error?) -> Void) -> Void {
@@ -29,11 +37,11 @@ struct TweetService {
         var author: User?
         
         Globals.tweets.observe(.childAdded) { (snapshot) in
-            guard let tweetsDictionary = snapshot.value as? TweetDictionary else {
+            guard let tweetDictionary = snapshot.value as? TweetDictionary else {
                 return
             }
             
-            guard let authorId = tweetsDictionary["authorId"] as? String else {
+            guard let authorId = tweetDictionary["authorId"] as? String else {
                 return
             }
             
@@ -41,11 +49,30 @@ struct TweetService {
                 author = user
                 
                 let tweetId = snapshot.key
-                let tweet = Tweet(createdBy: author!, tweetId: tweetId, dictionary: tweetsDictionary)
+                let tweet = Tweet(createdBy: author!, tweetId: tweetId, dictionary: tweetDictionary)
                 tweets.append(tweet)
                 
                 completion(tweets, nil)
             }
         }
+    }
+    
+    func fetchTweets(for user: User, completion: @escaping ([Tweet]?, Error?) -> Void) -> Void {
+        var tweets = Array<Tweet>()
+        
+        Globals.userTweets.child(user.uid).observe(.childAdded) { (snapshot) in
+            let tweetId = snapshot.key
+            
+            Globals.tweets.child(tweetId).observeSingleEvent(of: .value) { (snapshot) in
+                guard let tweetDictionary = snapshot.value as? TweetDictionary else {
+                    return
+                }
+                
+                let tweet = Tweet(createdBy: user, tweetId: tweetId, dictionary: tweetDictionary)
+                tweets.append(tweet)
+                
+                completion(tweets, nil)
+            }
+        }        
     }
 }

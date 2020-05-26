@@ -41,11 +41,20 @@ struct ProfileHeaderViewModel {
     }
     
     var actionButtonTitle: String {
+        var title: String = "Loading..."
+        
         if user.isCurrentUser {
-            return "Edit Profile"
+            title = "Edit Profile"
+            
+            return title
         }
-        else {
-            return "Follow"
+        
+        if user.isFollowed {
+            title = "Following"
+        } else {
+            title = "Follow"
         }
+        
+        return title
     }
 }
