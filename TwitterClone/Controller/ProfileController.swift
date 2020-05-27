@@ -40,6 +40,7 @@ class ProfileController: RootViewController {
         configureCollectionView()
         fetchTweets()
         checkIsUserFollowed()
+        fetchUserStats()
     }
     
     fileprivate func configureCollectionView() {
@@ -71,6 +72,16 @@ class ProfileController: RootViewController {
         
         UserService.shared.isFollowed(user) { (isFollowed) in
             self.user.isFollowed = isFollowed
+            
+            self.tweetsCollectionView.reloadData()
+        }
+    }
+    
+    func fetchUserStats() -> Void {
+        UserService.shared.fetchStats(for: user) { (followingCount, followerCount) in
+            self.user.followingCount = followingCount
+            self.user.followerCount = followerCount
+            
             self.tweetsCollectionView.reloadData()
         }
     }

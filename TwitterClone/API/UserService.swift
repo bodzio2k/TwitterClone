@@ -105,4 +105,19 @@ class UserService {
             completion(doesExist)
         }
     }
+    
+    func fetchStats(for user: User, completion: @escaping (Int, Int) -> Void) -> Void {
+        var followerCount = 0
+        var followingCount = 0
+        
+        Globals.userFollowing.child(user.uid).observeSingleEvent(of: .value) { (snapshot) in
+            followingCount = snapshot.children.allObjects.count
+            
+            Globals.userFollowers.child(user.uid).observeSingleEvent(of: .value) { (snapshot) in
+                followerCount = snapshot.children.allObjects.count
+                
+                completion(followingCount, followerCount)
+            }
+        }
+    }
 }

@@ -20,7 +20,7 @@ struct ProfileHeaderViewModel {
     
     var following: NSAttributedString {
         let followingString = NSAttributedString(string: " Following ", attributes: grayedTextAttrs)
-        let followingCount = NSAttributedString(string: "\(-999)", attributes: normalTextAttrs)
+        let followingCount = NSAttributedString(string: "\(user.followingCount ?? 0)", attributes: normalTextAttrs)
         let finalTextOutput = NSMutableAttributedString()
         
         finalTextOutput.append(followingString)
@@ -31,11 +31,11 @@ struct ProfileHeaderViewModel {
     
     var followers: NSAttributedString {
         let followersString = NSAttributedString(string: " Followers ", attributes: grayedTextAttrs)
-        let followersCount = NSAttributedString(string: "\(-998)", attributes: normalTextAttrs)
+        let followerCount = NSAttributedString(string: "\(user.followerCount ?? 0)", attributes: normalTextAttrs)
         let finalTextOutput = NSMutableAttributedString()
         
         finalTextOutput.append(followersString)
-        finalTextOutput.append(followersCount)
+        finalTextOutput.append(followerCount)
         
         return finalTextOutput
     }
