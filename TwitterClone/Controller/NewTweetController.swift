@@ -71,6 +71,7 @@ class NewTweetController: RootViewController {
         
         stack.axis = .horizontal
         stack.spacing = 8.0
+        stack.alignment = .leading
         
         view.addSubview(stack)
         stack.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingRight: 16.0)
