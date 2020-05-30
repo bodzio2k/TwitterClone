@@ -38,6 +38,7 @@ class TweetViewCell: UICollectionViewCell {
         let l = UILabel()
         
         l.font = UIFont.boldSystemFont(ofSize: 14.0)
+        l.setContentHuggingPriority(.defaultHigh, for: .vertical)
         
         return l
     }()
@@ -47,6 +48,8 @@ class TweetViewCell: UICollectionViewCell {
         
         l.font = UIFont.systemFont(ofSize: 12.0)
         l.numberOfLines = 0
+        l.lineBreakMode = .byWordWrapping
+        l.setContentHuggingPriority(.defaultHigh, for: .vertical)
         
         return l
     }()
@@ -60,27 +63,27 @@ class TweetViewCell: UICollectionViewCell {
         addSubview(profiePhotoImageView)
         profiePhotoImageView.anchor(top: safeAreaLayoutGuide.topAnchor, left: leftAnchor, paddingTop: 8.0, paddingLeft: 12.0)
         
-        let tweetStack = UIStackView(arrangedSubviews: [headerLineLabel, tweetCaptionLabel])
-        tweetStack.axis = .vertical
-        tweetStack.distribution = .fillProportionally
+        addSubview(headerLineLabel)
+        headerLineLabel.anchor(top: profiePhotoImageView.topAnchor, left: profiePhotoImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 0.0, paddingLeft: 8.0, paddingBottom: 0.0, paddingRight: 0.0, width: nil, height: nil)
         
-        addSubview(tweetStack)
-        tweetStack.anchor(top: safeAreaLayoutGuide.topAnchor, left: profiePhotoImageView.rightAnchor, right: rightAnchor, paddingTop: 8.0, paddingLeft: 12.0)
-        
+        addSubview(tweetCaptionLabel)
+        tweetCaptionLabel.anchor(top: headerLineLabel.bottomAnchor, left: profiePhotoImageView.rightAnchor, bottom: nil, right: rightAnchor, paddingTop: 2.0, paddingLeft: 8.0, paddingBottom: 0.0, paddingRight: 8.0, width: nil, height: nil)
+
         let buttons = createButtons()
         let buttonStack = UIStackView(arrangedSubviews: buttons)
+        buttonStack.spacing = 2.0
         buttonStack.axis = .horizontal
-        buttonStack.distribution  = .fillEqually
-        
-        addSubview(buttonStack)
-        buttonStack.anchor(top: nil, left: safeAreaLayoutGuide.leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingBottom: 8.0)
-        buttonStack.centerX(inView: self)
-        
+        buttonStack.distribution  = .fillProportionally
+
         let dividerBar = UIView()
-        dividerBar.backgroundColor = .lightGray
-        
+        dividerBar.backgroundColor = .systemGroupedBackground
+
         addSubview(dividerBar)
         dividerBar.anchor(left: safeAreaLayoutGuide.leftAnchor, bottom: safeAreaLayoutGuide.bottomAnchor, right: rightAnchor, height: 1.0)
+        
+        addSubview(buttonStack)
+        buttonStack.anchor(top: nil, left: safeAreaLayoutGuide.leftAnchor, bottom: dividerBar.topAnchor, right: rightAnchor, paddingTop: 8.0, paddingBottom: 8.0)
+        buttonStack.centerX(inView: self)
     }
     
     required init?(coder: NSCoder) {

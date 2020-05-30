@@ -14,7 +14,7 @@ struct Tweet {
     let timestamp: Date
     let caption: String
     let likes: Int
-    let retweetes: Int
+    let retweets: Int
     let author: User
     
     init(createdBy user: User, tweetId: String, dictionary: TweetDictionary) {
@@ -26,7 +26,7 @@ struct Tweet {
         timestamp = Date(timeIntervalSince1970: dictionary["timestamp"] as? TimeInterval ?? 0)
         caption = dictionary["caption"] as? String ?? ""
         likes = dictionary["likes"] as? Int ?? 0
-        retweetes = dictionary["retweets"] as? Int ?? 0
+        retweets = dictionary["retweets"] as? Int ?? 0
     }
 }
 

@@ -68,6 +68,13 @@ extension FeedController: UICollectionViewDataSource {
         return cell
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let tweet = tweets[indexPath.row]
+        let tweetController = TweetController(tweet: tweet)
+        
+        navigationController?.pushViewController(tweetController, animated: true)
+    }
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
@@ -79,7 +86,10 @@ extension FeedController: UICollectionViewDataSource {
 
 extension FeedController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let size = CGSize(width: view.frame.width, height: 300)
+        let tweet = tweets[indexPath.row]
+        
+        let viewModel = TweetViewModel(tweet: tweet)
+        let size = viewModel.size(for: TweetViewCell.self, width: view.frame.width)
         
         return size
     }
