@@ -35,7 +35,7 @@ class MainTabController: UITabBarController {
         
         let currentUser = root.currentUser!
         
-        let newTweetController = NewTweetController(user: currentUser)
+        let newTweetController = NewTweetController(user: currentUser, config: .newTweet)
         
         let newNavStack = UINavigationController(rootViewController: newTweetController)
         

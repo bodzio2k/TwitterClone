@@ -8,8 +8,15 @@
 
 import UIKit
 
+enum NewTweetConfiguration {
+    case newTweet
+    case reply(Tweet)
+}
+
 class NewTweetController: RootViewController {
     //MARK: Properties
+    var config: NewTweetConfiguration!
+    lazy var viewModel = NewTweetViewModel(config: config)
     lazy var newTweetButton: UIButton = {
         let button = UIButton()
         
@@ -22,13 +29,38 @@ class NewTweetController: RootViewController {
         
         return button
     }()
-    let profileImageView = UIImageView()
-    let tweetEditView = CaptionTextView()
+    lazy var profileImageView: UIImageView = {
+        let iv = UIImageView()
+        
+        iv.backgroundColor = .red
+        iv.clipsToBounds = true
+        iv.contentMode = .scaleAspectFill
+         
+        iv.setDimensions(width: 44.0, height: 44.0)
+        iv.layer.cornerRadius = 44.0 / 2.0
+            
+        if let profileImageURL = currentUser?.profilePhotoURL {
+            iv.sd_setImage(with: profileImageURL, completed: nil)
+        }
+        
+        return iv
+    }()
+    let captionTexView = CaptionTextView()
+    lazy var replyToLabel: UILabel = {
+        let l = UILabel()
+        
+        l.font = UIFont.systemFont(ofSize: 12.0)
+        l.text = "Replying to @lol"
+        l.textColor = .lightGray
+        
+        return l
+    }()
     
     //MARK: Lifecycle
-    init(user: User) {
+    init(user: User, config: NewTweetConfiguration) {
         super.init(nibName: nil, bundle: nil)
         
+        self.config = config
         self.currentUser = user
     }
     
@@ -49,7 +81,7 @@ class NewTweetController: RootViewController {
     }
     
     @objc func onNewTweet() {
-        guard let caption = tweetEditView.text else {
+        guard let caption = captionTexView.text else {
             return
         }
         
@@ -66,24 +98,22 @@ class NewTweetController: RootViewController {
     override func configureUI() {
         super.configureUI()
         
-        let profileImageSize: CGFloat = 48.0
-        let stack = UIStackView(arrangedSubviews: [profileImageView, tweetEditView])
+        let captionStack = UIStackView(arrangedSubviews: [profileImageView, captionTexView])
+        captionStack.axis = .horizontal
+        captionStack.spacing = 8.0
+        captionStack.distribution = .fillProportionally
         
-        stack.axis = .horizontal
-        stack.spacing = 8.0
-        stack.alignment = .leading
+        let wrapperStack = UIStackView(arrangedSubviews: [replyToLabel, captionStack])
+        wrapperStack.axis = .vertical
+        wrapperStack.spacing = 8.0
+        wrapperStack.distribution = .fillProportionally
         
-        view.addSubview(stack)
-        stack.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingRight: 16.0)
+        view.addSubview(wrapperStack)
+        wrapperStack.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 8.0, paddingLeft: 16.0, paddingRight: 16.0)
         
-        profileImageView.contentMode = .scaleAspectFit
-        profileImageView.clipsToBounds = true
-        profileImageView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, paddingTop: 16.0, paddingLeft: 16.0)
-        profileImageView.setDimensions(width: profileImageSize, height: profileImageSize)
-        profileImageView.sd_setImage(with: currentUser?.profilePhotoURL, completed: nil)
-        profileImageView.layer.cornerRadius = profileImageSize / 2.0
-        
-        /*tweetEditView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingTop: 8.0, paddingLeft: 8.0, paddingBottom: 8.0, paddingRight: 8.0, width: nil, height: nil)*/
+        newTweetButton.setTitle(viewModel.actionButtonTitle, for: .normal)
+        captionTexView.captionLabel.text = viewModel.placeholderText
+        replyToLabel.isHidden = !viewModel.shouldShowReplyLabel
     }
     
 }

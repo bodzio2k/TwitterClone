@@ -10,6 +10,7 @@ import UIKit
 
 protocol TweetCellDelegate: class {
     func profilePhotoImageViewTapped(at cell: TweetViewCell)
+    func replyButtonTapped(at cell: TweetViewCell)
 }
 
 class TweetViewCell: UICollectionViewCell {
@@ -98,22 +99,29 @@ class TweetViewCell: UICollectionViewCell {
             let b = UIButton(type: .system)
             var i: UIImage?
             var systemName: String!
+            var action: Selector
             
             switch j {
             case 0:
                 systemName = "bubble.right"
+                action = #selector(replyButtonTapped)
             case 1:
                 systemName = "arrow.2.squarepath"
+                action = #selector(replyButtonTapped)
             case 2:
                 systemName = "heart"
+                action = #selector(replyButtonTapped)
             case 3:
                 systemName = "square.and.arrow.up"
+                action = #selector(replyButtonTapped)
             default:
                 systemName = "questionmark.diamond"
+                action = #selector(replyButtonTapped)
             }
             i = UIImage(systemName: systemName)
             b.setImage(i, for: .normal)
             b.tintColor = .systemGray
+            b.addTarget(self, action: action, for: .touchUpInside)
             buttons.append(b)
         }
 
@@ -133,5 +141,9 @@ class TweetViewCell: UICollectionViewCell {
     //MARK: Selectors
     @objc func profilePhotoImageViewTapped() {
         delegate?.profilePhotoImageViewTapped(at: self)
+    }
+    
+    @objc func replyButtonTapped() {
+        delegate?.replyButtonTapped(at: self)
     }
 }

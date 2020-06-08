@@ -96,6 +96,17 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
 }
 
 extension FeedController: TweetCellDelegate {
+    func replyButtonTapped(at cell: TweetViewCell) {
+        guard let tweet = cell.tweet else {
+            return
+        }
+        
+        let newTweetController = NewTweetController(user: tweet.author, config: .reply(tweet))
+        let nav = UINavigationController(rootViewController: newTweetController)
+        present(nav, animated: true, completion: nil)
+        
+    }
+    
     func profilePhotoImageViewTapped(at cell: TweetViewCell) {
         guard let user = cell.tweet?.author else {
             return
