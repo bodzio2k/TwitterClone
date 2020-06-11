@@ -94,6 +94,7 @@ class TweetViewCell: UICollectionViewCell {
     //MARK: Helpers
     fileprivate func createButtons() -> [UIView] {
         var buttons = Array<UIView>()
+        let config = UIImage.SymbolConfiguration(pointSize: 12.0)
         
         for j in 0..<4 {
             let b = UIButton(type: .system)
@@ -118,7 +119,7 @@ class TweetViewCell: UICollectionViewCell {
                 systemName = "questionmark.diamond"
                 action = #selector(replyButtonTapped)
             }
-            i = UIImage(systemName: systemName)
+            i = UIImage(systemName: systemName, withConfiguration: config)
             b.setImage(i, for: .normal)
             b.tintColor = .systemGray
             b.addTarget(self, action: action, for: .touchUpInside)

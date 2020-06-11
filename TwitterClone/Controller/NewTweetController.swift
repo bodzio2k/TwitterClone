@@ -50,7 +50,6 @@ class NewTweetController: RootViewController {
         let l = UILabel()
         
         l.font = UIFont.systemFont(ofSize: 12.0)
-        l.text = "Replying to @lol"
         l.textColor = .lightGray
         
         return l
@@ -85,7 +84,7 @@ class NewTweetController: RootViewController {
             return
         }
         
-        TweetService.shared.newTweet(caption: caption) { (error, _) in
+        TweetService.shared.newTweet(caption: caption, config: config) { (error, _) in
             if let _ = error {
                 return
             }
@@ -102,6 +101,7 @@ class NewTweetController: RootViewController {
         captionStack.axis = .horizontal
         captionStack.spacing = 8.0
         captionStack.distribution = .fillProportionally
+        captionStack.alignment = .leading
         
         let wrapperStack = UIStackView(arrangedSubviews: [replyToLabel, captionStack])
         wrapperStack.axis = .vertical
@@ -114,6 +114,7 @@ class NewTweetController: RootViewController {
         newTweetButton.setTitle(viewModel.actionButtonTitle, for: .normal)
         captionTexView.captionLabel.text = viewModel.placeholderText
         replyToLabel.isHidden = !viewModel.shouldShowReplyLabel
+        replyToLabel.text = viewModel.replyLabelText
     }
     
 }

@@ -10,10 +10,10 @@ import UIKit
 
 class TweetController: RootViewController {
     //MARK: Properties
-    var tweetsCollectionView: UICollectionView!
+    var repliesCollectionView: UICollectionView!
     let cellIdentifier = "cellTweet"
     let headerIdentifer = "TweetHeader"
-    var tweets: [Tweet]?
+    var replies = Array<Tweet>()
     private let tweet: Tweet
     
     //MARK: Lifecycle
@@ -27,37 +27,47 @@ class TweetController: RootViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
+//    override func viewDidLoad() {
+//        super.viewDidLoad()
+//
+//        // Do any additional setup after loading the view.
+//    }
     
     //MARK: API Calls
+    func fetchReplies() -> Void {
+        TweetService.shared.fetchReplies(for: tweet) { (replies) in
+            self.replies = replies
+            
+            self.repliesCollectionView.reloadData()
+        }
+    }
+    
     //MARK: Helper
     override func configureUI() {
         super.configureUI()
         
         configureCollectionView()
+        
+        fetchReplies()
     }
     
     fileprivate func configureCollectionView() {
-        tweetsCollectionView = UICollectionView(frame: view.frame, collectionViewLayout: UICollectionViewFlowLayout())
+        repliesCollectionView = UICollectionView(frame: view.frame, collectionViewLayout: UICollectionViewFlowLayout())
         
-        view.addSubview(tweetsCollectionView)
-        //tweetsCollectionView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: -44.00, paddingLeft: 0.00, paddingBottom: 0.00, paddingRight: 0.00)
-        tweetsCollectionView.addConstraintsToFillView(self.view)
-        tweetsCollectionView.delegate = self
-        tweetsCollectionView.dataSource = self
+        view.addSubview(repliesCollectionView)
+        repliesCollectionView.addConstraintsToFillView(self.view)
+        repliesCollectionView.delegate = self
+        repliesCollectionView.dataSource = self
         
-        tweetsCollectionView.register(TweetViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
-        tweetsCollectionView.register(TweetHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdentifer)
+        repliesCollectionView.register(TweetViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        repliesCollectionView.register(TweetHeaderView.self, forSupplementaryViewOfKind: UICollectionView.elementKindSectionHeader, withReuseIdentifier: headerIdentifer)
+        repliesCollectionView.backgroundColor = .white
     }
 }
 
 extension TweetController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 4
+        return replies.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -65,11 +75,8 @@ extension TweetController: UICollectionViewDataSource {
             fatalError()
         }
         
-//        cell.delegate = self
-//
-        if let tweet = tweets?[indexPath.row] {
-            cell.configure(for: tweet)
-        }
+        let tweet = replies[indexPath.row]
+        cell.configure(for: tweet)
         
         return cell
     }
@@ -93,7 +100,10 @@ extension TweetController: UICollectionViewDelegate {
 
 extension TweetController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let size = CGSize(width: view.frame.width, height: 200)
+        let reply = replies[indexPath.row]
+        
+        let viewModel = TweetViewModel(tweet: reply)
+        let size = viewModel.size(for: TweetViewCell.self, width: view.frame.width)
         
         return size
     }

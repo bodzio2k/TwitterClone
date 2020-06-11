@@ -13,6 +13,7 @@ struct Globals {
     static let databaseReference = Database.database().reference()
     static let users = databaseReference.child("users")
     static let tweets = databaseReference.child("tweets")
+    static let tweetReplies = databaseReference.child("tweet-replies")
     static let userTweets = databaseReference.child("user-tweets")
     static let userFollowing = databaseReference.child("user-following")
     static let userFollowers = databaseReference.child("user-followers")
