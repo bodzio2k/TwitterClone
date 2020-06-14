@@ -15,12 +15,15 @@ class TweetController: RootViewController {
     let headerIdentifer = "TweetHeader"
     var replies = Array<Tweet>()
     private let tweet: Tweet
+    private lazy var actionSheetLauncher = ActionSheetLauncher(for: tweet.author)
     
     //MARK: Lifecycle
     init(tweet: Tweet) {
         self.tweet = tweet
         
         super.init(nibName: nil, bundle: nil)
+        
+        actionSheetLauncher.delegate = self
     }
     
     required init?(coder: NSCoder) {
@@ -76,6 +79,7 @@ extension TweetController: UICollectionViewDataSource {
         }
         
         let tweet = replies[indexPath.row]
+        cell.delegate = self
         cell.configure(for: tweet)
         
         return cell
@@ -88,13 +92,15 @@ extension TweetController: UICollectionViewDataSource {
 
 extension TweetController: UICollectionViewDelegate {
    func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
-       guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerIdentifer, for: indexPath) as? TweetHeaderView else {
+        guard let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: headerIdentifer, for: indexPath) as? TweetHeaderView else {
            fatalError()
-       }
+        
+        }
+    
+        header.delegate = self
+        header.tweet = tweet
        
-       header.tweet = tweet
-       
-       return header
+        return header
    }
 }
 
@@ -113,5 +119,77 @@ extension TweetController: UICollectionViewDelegateFlowLayout {
         let size = viewModel.size(for: TweetHeaderView.self, width: view.frame.width)
         
         return size
+    }
+}
+
+extension TweetController: TweetHeaderViewDelegate {
+    func profilePhotoImageViewTapped() {
+        let profileController = ProfileController(user: tweet.author)
+        
+        navigationController?.pushViewController(profileController, animated: true)
+    }
+    
+    func replyButtonTapped() {
+        let newTweetController = NewTweetController(user: tweet.author, config: .reply(tweet))
+        let nav = UINavigationController(rootViewController: newTweetController)
+        present(nav, animated: true, completion: nil)
+    }
+    
+    func optionButtonTapped() {
+        if tweet.author.isCurrentUser {
+            self.actionSheetLauncher.show()
+        }
+        else {
+            UserService.shared.isFollowed(tweet.author) { isFollowed in
+                var user = self.tweet.author
+                user.isFollowed = isFollowed
+                
+                self.actionSheetLauncher = ActionSheetLauncher(for: user)
+                self.actionSheetLauncher.delegate = self
+                self.actionSheetLauncher.show()
+            }
+        }
+    }
+}
+
+extension TweetController: ActionSheetLauncherDelegate {
+    func didSelect(option: ActionSheetOptions) {
+        switch option {
+        case .follow(let user):
+            UserService.shared.follow(user) { (err, ref) in
+                return
+            }
+        case .unfollow(let user):
+            UserService.shared.unfollow(user) { (err, ref) in
+                return
+            }
+        case .delete:
+            return
+        case .report:
+            return
+        }
+    }
+}
+
+extension TweetController: TweetCellDelegate {
+    func replyButtonTapped(at cell: TweetViewCell) {
+        guard let tweet = cell.tweet else {
+            return
+        }
+        
+        let newTweetController = NewTweetController(user: tweet.author, config: .reply(tweet))
+        let nav = UINavigationController(rootViewController: newTweetController)
+        present(nav, animated: true, completion: nil)
+        
+    }
+    
+    func profilePhotoImageViewTapped(at cell: TweetViewCell) {
+        guard let user = cell.tweet?.author else {
+            return
+        }
+        
+        let profileController = ProfileController(user: user)
+        
+        navigationController?.pushViewController(profileController, animated: true)
     }
 }

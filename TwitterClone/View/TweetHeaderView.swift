@@ -8,8 +8,15 @@
 
 import UIKit
 
+protocol TweetHeaderViewDelegate: class {
+    func optionButtonTapped()
+    func profilePhotoImageViewTapped()
+    func replyButtonTapped()
+}
+
 class TweetHeaderView: UICollectionReusableView {
     //MARK: Properties
+    weak var delegate: TweetHeaderViewDelegate?
     var tweet: Tweet? {
         didSet {
             if let tweet = tweet {
@@ -88,7 +95,7 @@ class TweetHeaderView: UICollectionReusableView {
     let optionButton: UIButton = {
         let b = UIButton(type: .system)
         b.tintColor = .lightGray
-        let i = UIImage(systemName: "chevron.down")
+        let i = UIImage(systemName: "chevron.down", withConfiguration: UIImage.SymbolConfiguration(pointSize: 12.0))
         b.setImage(i, for: .normal)
         b.addTarget(self, action: #selector(optionButtonTapped), for: .touchUpInside)
         
@@ -181,11 +188,15 @@ class TweetHeaderView: UICollectionReusableView {
     
     //MARK: Selectors
     @objc func profilePhotoImageViewTapped() {
-        
+        delegate?.profilePhotoImageViewTapped()
     }
     
     @objc func optionButtonTapped() {
-        
+        delegate?.optionButtonTapped()
+    }
+    
+    @objc func replyButtonTapped() {
+        delegate?.replyButtonTapped()
     }
     
     //MARK: Helpers
@@ -197,22 +208,29 @@ class TweetHeaderView: UICollectionReusableView {
             let b = UIButton(type: .system)
             var i: UIImage?
             var systemName: String!
+            var action: Selector
             
             switch j {
             case 0:
                 systemName = "bubble.right"
+                action = #selector(replyButtonTapped)
             case 1:
                 systemName = "arrow.2.squarepath"
+                action = #selector(replyButtonTapped)
             case 2:
                 systemName = "heart"
+                action = #selector(replyButtonTapped)
             case 3:
                 systemName = "square.and.arrow.up"
+                action = #selector(replyButtonTapped)
             default:
                 systemName = "questionmark.diamond"
+                action = #selector(replyButtonTapped)
             }
             i = UIImage(systemName: systemName, withConfiguration: config)
             b.setImage(i, for: .normal)
             b.tintColor = .systemGray
+            b.addTarget(self, action: action, for: .touchUpInside)
             buttons.append(b)
         }
 
