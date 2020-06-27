@@ -20,6 +20,11 @@ class FeedController: RootViewController {
 
         super.viewDidLoad()
         
+        fetchTweets()
+    }
+    
+    //MARK: API
+    fileprivate func fetchTweets() {
         TweetService.shared.fetchTweets { (tweets, error) in
             if let _ = error {
                 return
@@ -30,6 +35,17 @@ class FeedController: RootViewController {
             }
             
             self.tweetsCollectionView.reloadData()
+            self.checkUserLikes()
+        }
+    }
+    
+    fileprivate func checkUserLikes() {
+        for (index, tweet) in tweets.enumerated() {
+            TweetService.shared.checkIfUserLikes(tweet) { (didLike) in
+                self.tweets[index].didLike = didLike
+                let indexPath = IndexPath(row: index, section: 0)
+                self.tweetsCollectionView.reloadItems(at: [indexPath])
+            }
         }
     }
     
@@ -96,6 +112,25 @@ extension FeedController: UICollectionViewDelegateFlowLayout {
 }
 
 extension FeedController: TweetCellDelegate {
+    func likeButtonTapped(at cell: TweetViewCell) {
+        guard let tweet = cell.tweet else {
+            return
+        }
+        
+        TweetService.shared.like(tweet) { (err, ref) in
+            if let _ = err {
+                return
+            }
+            
+            cell.tweet?.didLike.toggle()
+            let likes = tweet.didLike ? tweet.likes - 1 : tweet.likes + 1
+            cell.tweet?.likes = likes
+            cell.reconfigure()
+            
+            self.checkUserLikes()
+        }
+    }
+    
     func replyButtonTapped(at cell: TweetViewCell) {
         guard let tweet = cell.tweet else {
             return

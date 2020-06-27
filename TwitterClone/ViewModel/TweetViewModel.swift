@@ -71,6 +71,16 @@ struct TweetViewModel {
         return "@\(tweet.author.username)"
     }
     
+    var likeButtonTintColor: UIColor {
+        return tweet.didLike ? UIColor.red : UIColor.lightGray
+    }
+    
+    var likeButtonImage: UIImage {
+        let systemName = tweet.didLike ? "suit.heart.fill" : "suit.heart"
+        
+        return UIImage(systemName: systemName, withConfiguration: UIImage.SymbolConfiguration(pointSize: 12.0))!
+    }
+    
     func size(for view: AnyClass, width: CGFloat) -> CGSize {
         var calculatedSize: CGSize!
         let measurementLabel = UILabel()

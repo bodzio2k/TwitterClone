@@ -172,6 +172,16 @@ extension TweetController: ActionSheetLauncherDelegate {
 }
 
 extension TweetController: TweetCellDelegate {
+    func likeButtonTapped(at cell: TweetViewCell) {
+        guard let tweet = cell.tweet else {
+            return
+        }
+        
+        TweetService.shared.like(tweet) { (err, ref) in
+            return
+        }
+    }
+    
     func replyButtonTapped(at cell: TweetViewCell) {
         guard let tweet = cell.tweet else {
             return

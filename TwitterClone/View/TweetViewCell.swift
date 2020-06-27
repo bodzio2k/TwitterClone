@@ -11,12 +11,14 @@ import UIKit
 protocol TweetCellDelegate: class {
     func profilePhotoImageViewTapped(at cell: TweetViewCell)
     func replyButtonTapped(at cell: TweetViewCell)
+    func likeButtonTapped(at cell: TweetViewCell)
 }
 
 class TweetViewCell: UICollectionViewCell {
     //MARK: Properties
     weak var delegate: TweetCellDelegate?
     var tweet: Tweet?
+    var buttons: [UIButton]!
     
     lazy var profiePhotoImageView: UIImageView = {
         let profilePhotoSize: CGFloat = 44.0
@@ -70,8 +72,8 @@ class TweetViewCell: UICollectionViewCell {
         addSubview(tweetCaptionLabel)
         tweetCaptionLabel.anchor(top: headerLineLabel.bottomAnchor, left: profiePhotoImageView.rightAnchor, bottom: nil, right: rightAnchor, paddingTop: 2.0, paddingLeft: 8.0, paddingBottom: 0.0, paddingRight: 8.0, width: nil, height: nil)
 
-        let buttons = createButtons()
-        let buttonStack = UIStackView(arrangedSubviews: buttons)
+        buttons = createButtons()
+        let buttonStack = UIStackView(arrangedSubviews: buttons!)
         buttonStack.spacing = 2.0
         buttonStack.axis = .horizontal
         buttonStack.distribution  = .fillProportionally
@@ -92,8 +94,8 @@ class TweetViewCell: UICollectionViewCell {
     }
     
     //MARK: Helpers
-    fileprivate func createButtons() -> [UIView] {
-        var buttons = Array<UIView>()
+    fileprivate func createButtons() -> [UIButton] {
+        var buttons = Array<UIButton>()
         let config = UIImage.SymbolConfiguration(pointSize: 12.0)
         
         for j in 0..<4 {
@@ -111,7 +113,7 @@ class TweetViewCell: UICollectionViewCell {
                 action = #selector(replyButtonTapped)
             case 2:
                 systemName = "heart"
-                action = #selector(replyButtonTapped)
+                action = #selector(likeButtonTapped)
             case 3:
                 systemName = "square.and.arrow.up"
                 action = #selector(replyButtonTapped)
@@ -137,6 +139,14 @@ class TweetViewCell: UICollectionViewCell {
         profiePhotoImageView.sd_setImage(with: viewModel.profilePhotoURL)
         headerLineLabel.attributedText = viewModel.headerLine
         tweetCaptionLabel.text = tweet.caption
+        buttons[2].tintColor = viewModel.likeButtonTintColor
+        buttons[2].setImage(viewModel.likeButtonImage, for: .normal)
+    }
+    
+    func reconfigure() -> Void {
+        if let tweet = self.tweet {
+            configure(for: tweet)
+        }
     }
     
     //MARK: Selectors
@@ -146,5 +156,9 @@ class TweetViewCell: UICollectionViewCell {
     
     @objc func replyButtonTapped() {
         delegate?.replyButtonTapped(at: self)
+    }
+    
+    @objc func likeButtonTapped() {
+        delegate?.likeButtonTapped(at: self)
     }
 }

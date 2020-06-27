@@ -13,9 +13,10 @@ struct Tweet {
     let tweetId: String
     let timestamp: Date
     let caption: String
-    let likes: Int
+    var likes: Int
     let retweets: Int
     let author: User
+    var didLike = false
     
     init(createdBy user: User, tweetId: String, dictionary: TweetDictionary) {
         self.tweetId = tweetId
