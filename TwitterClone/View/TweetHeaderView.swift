@@ -12,30 +12,15 @@ protocol TweetHeaderViewDelegate: class {
     func optionButtonTapped()
     func profilePhotoImageViewTapped()
     func replyButtonTapped()
+    func likeButtonTapped(at headerView: TweetHeaderView)
 }
 
 class TweetHeaderView: UICollectionReusableView {
     //MARK: Properties
     weak var delegate: TweetHeaderViewDelegate?
-    var tweet: Tweet? {
-        didSet {
-            if let tweet = tweet {
-                var viewModel = TweetViewModel(tweet: tweet)
-                
-                usernameLabel.text = viewModel.username
-                fullnameLabel.text = tweet.author.fullname
-                captionLabel.text = tweet.caption
-                
-                if let profilePhotoURL = tweet.author.profilePhotoURL {
-                    profiePhotoImageView.sd_setImage(with: profilePhotoURL)
-                }
-                
-                timestampLabel.text = viewModel.timestamp
-                likesLabel.attributedText = viewModel.likesAttributedString
-                retweetsLabel.attributedText = viewModel.retweetsAttributedString
-            }
-        }
-    }
+    var tweet: Tweet?
+    var buttons = Array<UIButton>()
+    
     lazy var profiePhotoImageView: UIImageView = {
        let profilePhotoSize: CGFloat = 44.0
        let iv = UIImageView()
@@ -146,6 +131,33 @@ class TweetHeaderView: UICollectionReusableView {
         return v
     }()
     
+    func configure(for tweet: Tweet) {
+        self.tweet = tweet
+        
+        var viewModel = TweetViewModel(tweet: tweet)
+        
+        usernameLabel.text = viewModel.username
+        fullnameLabel.text = tweet.author.fullname
+        captionLabel.text = tweet.caption
+        
+        if let profilePhotoURL = tweet.author.profilePhotoURL {
+            profiePhotoImageView.sd_setImage(with: profilePhotoURL)
+        }
+        
+        timestampLabel.text = viewModel.timestamp
+        likesLabel.attributedText = viewModel.likesAttributedString
+        retweetsLabel.attributedText = viewModel.retweetsAttributedString
+        
+        buttons[2].tintColor = viewModel.likeButtonTintColor
+        buttons[2].setImage(viewModel.likeButtonImage, for: .normal)
+    }
+    
+    func reconfigure() {
+        if let tweet = self.tweet {
+            self.configure(for: tweet)
+        }
+    }
+    
     //MARK: Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -173,11 +185,11 @@ class TweetHeaderView: UICollectionReusableView {
         addSubview(statsView)
         statsView.anchor(top: timestampLabel.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 8.0, height: 40.0)
 
-        let buttons = createButtons()
+        buttons = createButtons()
         let buttonStack = UIStackView(arrangedSubviews: buttons)
         buttonStack.axis = .horizontal
         buttonStack.distribution  = .fillEqually
-
+        
         addSubview(buttonStack)
         buttonStack.anchor(top: statsView.bottomAnchor, left: safeAreaLayoutGuide.leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 8.0)
     }
@@ -199,9 +211,13 @@ class TweetHeaderView: UICollectionReusableView {
         delegate?.replyButtonTapped()
     }
     
+    @objc func likeButtonTapped() {
+        delegate?.likeButtonTapped(at: self)
+    }
+    
     //MARK: Helpers
-    fileprivate func createButtons() -> [UIView] {
-        var buttons = Array<UIView>()
+    fileprivate func createButtons() -> [UIButton] {
+        var buttons = Array<UIButton>()
         let config = UIImage.SymbolConfiguration(pointSize: 12.0)
         
         for j in 0..<4 {
@@ -219,7 +235,7 @@ class TweetHeaderView: UICollectionReusableView {
                 action = #selector(replyButtonTapped)
             case 2:
                 systemName = "heart"
-                action = #selector(replyButtonTapped)
+                action = #selector(likeButtonTapped)
             case 3:
                 systemName = "square.and.arrow.up"
                 action = #selector(replyButtonTapped)

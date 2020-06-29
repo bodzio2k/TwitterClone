@@ -23,6 +23,12 @@ class FeedController: RootViewController {
         fetchTweets()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.checkUserLikes()
+    }
+    
     //MARK: API
     fileprivate func fetchTweets() {
         TweetService.shared.fetchTweets { (tweets, error) in
