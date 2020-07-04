@@ -112,8 +112,8 @@ struct TweetService {
             return
         }
         
-        let likes = tweet.didLike ? tweet.likes - 1 : tweet.likes + 1
-        Globals.tweets.child(tweet.tweetId).child("likes").setValue(likes)
+        //let likes = tweet.didLike ? tweet.likes + 1 : tweet.likes - 1
+        Globals.tweets.child(tweet.tweetId).child("likes").setValue(tweet.likes)
         
         if tweet.didLike {
             Globals.userLikes.child(uid).child(tweet.tweetId).removeValue { (err, ref) in

@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct Tweet {
+class Tweet {
     let authorId: String
     let tweetId: String
     let timestamp: Date

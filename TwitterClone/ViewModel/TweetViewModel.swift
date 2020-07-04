@@ -46,18 +46,18 @@ struct TweetViewModel {
     }()
     
     lazy var likesAttributedString: NSAttributedString = {
-        let followersString = NSAttributedString(string: "Retweets ", attributes: grayedTextAttrs)
-        let followerCount = NSAttributedString(string: "\(tweet.likes)", attributes: normalTextAttrs)
+        let likesString = NSAttributedString(string: "Likes ", attributes: grayedTextAttrs)
+        let likesCount = NSAttributedString(string: "\(tweet.likes)", attributes: normalTextAttrs)
         let finalTextOutput = NSMutableAttributedString()
         
-        finalTextOutput.append(followersString)
-        finalTextOutput.append(followerCount)
+        finalTextOutput.append(likesString)
+        finalTextOutput.append(likesCount)
         
         return finalTextOutput
     }()
     
     lazy var retweetsAttributedString: NSAttributedString = {
-        let followersString = NSAttributedString(string: "Likes ", attributes: grayedTextAttrs)
+        let followersString = NSAttributedString(string: "Retweets ", attributes: grayedTextAttrs)
         let followerCount = NSAttributedString(string: "\(tweet.retweets)", attributes: normalTextAttrs)
         let finalTextOutput = NSMutableAttributedString()
         

@@ -123,15 +123,19 @@ extension FeedController: TweetCellDelegate {
             return
         }
         
+        var likes = tweet.likes
+        likes = tweet.didLike ? likes - 1 : likes + 1
+        tweet.likes = likes
+        tweets.first(where: { $0.tweetId == tweet.tweetId })?.likes = likes
+        
         TweetService.shared.like(tweet) { (err, ref) in
             if let _ = err {
                 return
             }
             
             cell.tweet?.didLike.toggle()
-            let likes = tweet.didLike ? tweet.likes - 1 : tweet.likes + 1
             cell.tweet?.likes = likes
-            cell.reconfigure()
+            cell.configure(for: tweet)
             
             self.checkUserLikes()
         }

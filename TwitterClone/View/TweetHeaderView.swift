@@ -119,7 +119,7 @@ class TweetHeaderView: UICollectionReusableView {
         
         let statsStack = UIStackView(arrangedSubviews: [likesLabel, retweetsLabel])
         statsStack.axis = .horizontal
-        statsStack.distribution = .fillEqually
+        statsStack.distribution = .fillProportionally
         statsStack.spacing = 8.0
         
         v.addSubview(statsStack)

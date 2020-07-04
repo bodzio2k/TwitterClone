@@ -124,18 +124,24 @@ extension TweetController: UICollectionViewDelegateFlowLayout {
 
 extension TweetController: TweetHeaderViewDelegate {
     func likeButtonTapped(at headerView: TweetHeaderView) {
+        guard let tweet = headerView.tweet else {
+            return
+        }
+        
+        let likes = tweet.didLike ? tweet.likes - 1 : tweet.likes + 1
+        tweet.likes = likes
+        
         TweetService.shared.like(tweet) { (err, ref) in
             if let _ = err {
                 return
             }
             
-            headerView.tweet?.didLike.toggle()
-            let likes = headerView.tweet?.didLike ?? false ? headerView.tweet?.likes ?? 0 - 1 : headerView.tweet?.likes ?? 0 + 1
+            tweet.didLike.toggle()
+            tweet.likes = likes
+            headerView.configure(for: tweet)
             
-            headerView.tweet?.likes = likes
-            headerView.reconfigure()
+            return
         }
-        
     }
     
     func profilePhotoImageViewTapped() {
@@ -193,6 +199,10 @@ extension TweetController: TweetCellDelegate {
         guard let tweet = cell.tweet else {
             return
         }
+        
+        var likes = tweet.likes
+        likes = tweet.didLike ? likes - 1 : likes + 1
+        tweet.likes = likes
         
         TweetService.shared.like(tweet) { (err, ref) in
             return
