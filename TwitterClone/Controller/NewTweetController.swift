@@ -89,6 +89,10 @@ class NewTweetController: RootViewController {
                 return
             }
             
+            if case .reply(let tweet) = self.config {
+                NotificationService.shared.upload(notification: .reply, tweet: tweet)
+            }
+            
             self.dismiss(animated: true, completion: nil)
         }
     }

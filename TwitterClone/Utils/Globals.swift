@@ -20,6 +20,7 @@ struct Globals {
     static let userFollowers = databaseReference.child("user-followers")
     static let tweetLikes = databaseReference.child("tweet-likes")
     static let userLikes = databaseReference.child("user-likes")
+    static let notifications = databaseReference.child("notifications")
     
     static let storageReference = Storage.storage().reference()
     static let profileImages = storageReference.child("profile_images")

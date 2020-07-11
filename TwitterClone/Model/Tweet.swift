@@ -31,4 +31,4 @@ class Tweet {
     }
 }
 
-typealias TweetDictionary = [String: Any]
+typealias TweetDictionary = [String: AnyObject]

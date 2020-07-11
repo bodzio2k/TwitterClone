@@ -67,6 +67,27 @@ struct TweetService {
         }
     }
     
+    func fetchTweet(with tweetId: String, completion: @escaping (Tweet) -> Void) {
+        let _ = tweetId
+        
+        Globals.tweets.child(tweetId).observe(.value) { (snapshot) in
+            guard let tweetDictionary = snapshot.value as? TweetDictionary else {
+                return
+            }
+            
+            guard let authorId = tweetDictionary["authorId"] as? String else {
+                return
+            }
+            
+            UserService.shared.fetchUser(identifiedBy: authorId) { user in
+                let tweetId = snapshot.key
+                let tweet = Tweet(createdBy: user, tweetId: tweetId, dictionary: tweetDictionary)
+                
+                completion(tweet)
+            }
+        }
+    }
+    
     func fetchTweets(for user: User, completion: @escaping ([Tweet]?, Error?) -> Void) -> Void {
         var tweets = Array<Tweet>()
         
@@ -112,7 +133,6 @@ struct TweetService {
             return
         }
         
-        //let likes = tweet.didLike ? tweet.likes + 1 : tweet.likes - 1
         Globals.tweets.child(tweet.tweetId).child("likes").setValue(tweet.likes)
         
         if tweet.didLike {
@@ -128,6 +148,8 @@ struct TweetService {
                     if let _ = err {
                         return
                     }
+                    
+                    NotificationService.shared.upload(notification: .like, tweet: tweet)
                     
                     completion(err, ref)
                 }

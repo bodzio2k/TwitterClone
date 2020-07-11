@@ -72,6 +72,8 @@ class UserService {
                 if let err = err {
                     completion(err, ref)
                 }
+                
+                NotificationService.shared.upload(notification: .follow, user: followingUser)
             }
         }
     }

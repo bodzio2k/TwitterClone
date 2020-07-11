@@ -46,10 +46,6 @@ class ExploreController: RootViewController {
     override func viewDidLoad() {
         navigationItemTitle = "Explore"
         
-        tableView.register(UserCell.self, forCellReuseIdentifier: reuseIdentifier)
-        tableView.dataSource = self
-        tableView.delegate = self
-        
         configureSearchConotroller()
         
         super.viewDidLoad()
@@ -63,13 +59,14 @@ class ExploreController: RootViewController {
         view.addSubview(tableView)
         tableView.addConstraintsToFillView(self.view)
         
+        tableView.register(UserCell.self, forCellReuseIdentifier: reuseIdentifier)
+        tableView.dataSource = self
+        
         tableView.rowHeight = 60.0
         tableView.separatorStyle = .none
+        
+        
     }
-}
-
-extension ExploreController: UITableViewDelegate {
-    
 }
 
 extension ExploreController: UITableViewDataSource {

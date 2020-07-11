@@ -28,7 +28,6 @@ class UserCell: UITableViewCell {
         let l = UILabel()
         
         l.font = UIFont.boldSystemFont(ofSize: 14.0)
-        l.text = "full Name"
         
         return l
     }()
@@ -38,8 +37,6 @@ class UserCell: UITableViewCell {
         
         l.font = UIFont.systemFont(ofSize: 12.0)
         l.textColor = .lightGray
-        
-        l.text = "USerName"
         
         return l
     }()
