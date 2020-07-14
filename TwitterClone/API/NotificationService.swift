@@ -34,12 +34,12 @@ struct NotificationService {
     
     func fetchNotifications(completion: @escaping ([Notification]) -> Void) {
         var notifications = Array<Notification>()
-
-        guard let user = Auth.auth().currentUser else {
+        
+        guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
-
-        Globals.notifications.child(user.uid).observe(.childAdded) { (snapshot) in
+        
+        Globals.notifications.child(uid).observe(.childAdded) { (snapshot) in
             guard let dictionary = snapshot.value as? NotificationDictionary else {
                 return
             }
@@ -48,18 +48,56 @@ struct NotificationService {
                 return
             }
             
-            guard let tweetId = dictionary["tweetId"] as? String else {
-                return
-            }
-            
-            UserService.shared.fetchUser(identifiedBy: uid) { (user) in
+            if let tweetId = dictionary["tweetId"] as? String {
+                print("fetching tweet \(tweetId)...")
                 TweetService.shared.fetchTweet(with: tweetId) { (tweet) in
-                    let notification = Notification(user: user, tweet: tweet, dictionary: dictionary)
-                    
+                    UserService.shared.fetchUser(identifiedBy: uid) { (user) in
+                        let notification = Notification(user: user, tweet: tweet, dictionary: dictionary)
+
+                        notifications.append(notification)
+                        completion(notifications.sorted { $0.timestamp > $1.timestamp })
+                    }
+                }
+            }
+            else {
+                UserService.shared.fetchUser(identifiedBy: uid) { (user) in
+                    let notification = Notification(user: user, tweet: nil,  dictionary: dictionary)
+
                     notifications.append(notification)
                     completion(notifications)
                 }
             }
+
+//            guard let dictionary = snapshot.value as? NSDictionary else {
+//                return
+//            }
+//
+//            for (_, value) in dictionary {
+//                guard let dictionary = value as? NotificationDictionary, let uid = dictionary["uid"] as? String else {
+//                    continue
+//                }
+//
+//                if let tweetId = dictionary["tweetId"] as? String {
+//                    TweetService.shared.fetchTweet(with: tweetId) { (tweet) in
+//                        print("fetching tweet \(tweetId)...")
+//
+//                        UserService.shared.fetchUser(identifiedBy: uid) { (user) in
+//                            let notification = Notification(user: user, tweet: tweet, dictionary: dictionary)
+//
+//                            notifications.append(notification)
+//                            completion(notifications.sorted { $0.timestamp > $1.timestamp })
+//                        }
+//                    }
+//                }
+//                else {
+//                    UserService.shared.fetchUser(identifiedBy: uid) { (user) in
+//                        let notification = Notification(user: user, tweet: nil,  dictionary: dictionary)
+//
+//                        notifications.append(notification)
+//                        completion(notifications)
+//                    }
+//                }
+//            }
         }
     }
 }

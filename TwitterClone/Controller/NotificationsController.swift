@@ -36,6 +36,8 @@ class NotificationsController: RootViewController {
     
     //MARK: Helpers
     override func configureUI() {
+        super.configureUI()
+        
         view.addSubview(tableView)
         tableView.addConstraintsToFillView(self.view)
         
@@ -50,7 +52,16 @@ class NotificationsController: RootViewController {
     //MARK: API
     func fetchNotifications() -> Void {
         NotificationService.shared.fetchNotifications() { (notifications) in
-            self.notifications = notifications
+            self.notifications = notifications.sorted { $0.timestamp > $1.timestamp }
+            
+            for (index, notification) in notifications.enumerated() {
+                if case .follow = notification.type {
+                    UserService.shared.isFollowed(notification.user) { (isFollowed) in
+                        self.notifications[index].user.isFollowed = isFollowed
+                    }
+                }
+            }
+            
             self.tableView.reloadData()
         }
     }
@@ -89,6 +100,10 @@ extension NotificationsController: UITableViewDelegate {
 }
 
 extension NotificationsController: NotificationViewCellDelegate {
+    func followButtonTapped(at cell: NotificationViewCell) {
+        return
+    }
+    
     func profiePhotoImageViewTapped(at cell: NotificationViewCell) {
         guard let user = cell.notification?.user else {
             return

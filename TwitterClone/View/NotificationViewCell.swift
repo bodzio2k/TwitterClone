@@ -10,6 +10,7 @@ import UIKit
 
 protocol NotificationViewCellDelegate: class {
     func profiePhotoImageViewTapped(at cell: NotificationViewCell)
+    func followButtonTapped(at cell: NotificationViewCell)
 }
 
 class NotificationViewCell: UITableViewCell {
@@ -41,6 +42,20 @@ class NotificationViewCell: UITableViewCell {
         return l
     }()
     
+    let followButton: UIButton = {
+        let b = UIButton(type: .system)
+        
+        b.setTitle("Follow", for: .normal)
+        b.setTitleColor(.twitterBlue, for: .normal)
+        b.titleLabel?.font = UIFont.boldSystemFont(ofSize: 14.0)
+        b.backgroundColor = .white
+        b.layer.borderWidth = 1.25
+        b.layer.borderColor = UIColor.twitterBlue.cgColor
+        b.addTarget(self, action: #selector(followButtonTapped), for: .touchUpInside)
+        
+        return b
+    }()
+    
     //MARK: Lifecycle
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -52,12 +67,17 @@ class NotificationViewCell: UITableViewCell {
         addSubview(label)
         label.centerY(inView: self)
         label.anchor(left: profiePhotoImageView.rightAnchor, paddingLeft: 8.0)
+        
+        addSubview(followButton)
+        followButton.centerY(inView: self)
+        followButton.anchor(right: safeAreaLayoutGuide.rightAnchor, paddingRight: 8.0)
+        followButton.setDimensions(width: 88.0, height: 32.0)
+        followButton.layer.cornerRadius = 16.0
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
     
     //MARK: Helpers
     func configure(for notifiation: Notification) -> Void {
@@ -66,10 +86,16 @@ class NotificationViewCell: UITableViewCell {
         
         label.attributedText = viewModel.notificationText
         profiePhotoImageView.sd_setImage(with: viewModel.profilePhotoUrl, completed: nil)
+        followButton.isHidden = viewModel.shouldHideFollowButton
+        followButton.setTitle(viewModel.followButtonText, for: .normal)
     }
     
     //MARK: Selectors
     @objc func profilePhotoImageTapped() {
         delegate?.profiePhotoImageViewTapped(at: self)
+    }
+    
+    @objc func followButtonTapped() {
+        
     }
 }

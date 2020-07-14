@@ -17,7 +17,7 @@ enum NotificationType: Int {
 }
 
 struct Notification {
-    let user: User
+    var user: User
     let tweet: Tweet!
     let timestamp: Date
     let type: NotificationType!
@@ -34,4 +34,4 @@ struct Notification {
     }
 }
 
-typealias NotificationDictionary = Dictionary<String, Any>
+typealias NotificationDictionary = Dictionary<String, AnyObject>

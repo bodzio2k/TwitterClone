@@ -49,4 +49,12 @@ struct NotificationViewModel {
         
         return notificationText
     }
+    
+    var shouldHideFollowButton: Bool {
+        return notificationType != .follow
+    }
+    
+    var followButtonText: String {
+        return notification.user.isFollowed ? "Following" : "Follow"
+    }
 }

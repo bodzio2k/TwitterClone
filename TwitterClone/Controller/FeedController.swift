@@ -37,7 +37,9 @@ class FeedController: RootViewController {
             }
             
             if let tweets = tweets {
-                self.tweets = tweets
+                self.tweets = tweets.sorted(by: { (t1, t2) -> Bool in
+                    return t1.timestamp > t2.timestamp
+                })
             }
             
             self.tweetsCollectionView.reloadData()

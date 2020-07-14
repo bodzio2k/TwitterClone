@@ -68,9 +68,7 @@ struct TweetService {
     }
     
     func fetchTweet(with tweetId: String, completion: @escaping (Tweet) -> Void) {
-        let _ = tweetId
-        
-        Globals.tweets.child(tweetId).observe(.value) { (snapshot) in
+        Globals.tweets.child(tweetId).observeSingleEvent(of: .value) { (snapshot) in
             guard let tweetDictionary = snapshot.value as? TweetDictionary else {
                 return
             }
