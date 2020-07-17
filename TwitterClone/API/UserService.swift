@@ -64,16 +64,9 @@ class UserService {
         }
         
         Globals.userFollowing.child(currentUser.uid).updateChildValues([followingUser.uid: 1]) {err, ref in
-            if let err = err {
-                completion(err, ref)
-            }
-            
             Globals.userFollowers.child(followingUser.uid).updateChildValues([currentUser.uid: 1]) {err, ref in
-                if let err = err {
-                    completion(err, ref)
-                }
-                
                 NotificationService.shared.upload(notification: .follow, user: followingUser)
+                completion(err, ref)
             }
         }
     }
@@ -89,9 +82,7 @@ class UserService {
             }
             
             Globals.userFollowers.child(userToUnfollow.uid).child(currentUser.uid).removeValue() {err, ref in
-                if let err = err {
-                    completion(err, ref)
-                }
+                completion(err, ref)
             }
         }
     }

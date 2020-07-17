@@ -42,7 +42,7 @@ class NotificationViewCell: UITableViewCell {
         return l
     }()
     
-    let followButton: UIButton = {
+    lazy var followButton: UIButton = {
         let b = UIButton(type: .system)
         
         b.setTitle("Follow", for: .normal)
@@ -90,12 +90,18 @@ class NotificationViewCell: UITableViewCell {
         followButton.setTitle(viewModel.followButtonText, for: .normal)
     }
     
+    func reconfigure() -> Void {
+        if let notification = self.notification {
+            configure(for: notification)
+        }
+    }
+    
     //MARK: Selectors
     @objc func profilePhotoImageTapped() {
         delegate?.profiePhotoImageViewTapped(at: self)
     }
     
     @objc func followButtonTapped() {
-        
+        delegate?.followButtonTapped(at: self)
     }
 }
