@@ -52,6 +52,7 @@ class NotificationViewCell: UITableViewCell {
         b.layer.borderWidth = 1.25
         b.layer.borderColor = UIColor.twitterBlue.cgColor
         b.addTarget(self, action: #selector(followButtonTapped), for: .touchUpInside)
+        b.isHidden = true
         
         return b
     }()

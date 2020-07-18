@@ -47,6 +47,10 @@ class NotificationsController: RootViewController {
         
         tableView.rowHeight = 60.0
         tableView.separatorStyle = .none
+        
+        let refreshControl = UIRefreshControl()
+        tableView.refreshControl = refreshControl
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
     }
     
     fileprivate func checkIsUserIsFollowed() {
@@ -61,6 +65,12 @@ class NotificationsController: RootViewController {
         }
     }
     
+    //MARK: Selectors
+    @objc func refresh() {
+        self.tableView.refreshControl?.beginRefreshing()
+        fetchNotifications()
+    }
+    
     //MARK: API
     func fetchNotifications() -> Void {
         NotificationService.shared.fetchNotifications() { (notifications) in
@@ -68,6 +78,7 @@ class NotificationsController: RootViewController {
             self.tableView.reloadData()
             
             self.checkIsUserIsFollowed()
+            self.tableView.refreshControl?.endRefreshing()
         }
     }
 }
