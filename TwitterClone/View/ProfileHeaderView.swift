@@ -131,14 +131,6 @@ class ProfileHeaderView: UICollectionReusableView {
     
     let filterView = ProfileFilterView()
     
-    let underlineView: UIView = {
-        let v = UIView()
-        
-        v.backgroundColor = .twitterBlue
-        
-        return v
-    }()
-    
     //MARK: Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -203,9 +195,6 @@ class ProfileHeaderView: UICollectionReusableView {
         
         addSubview(filterView)
         filterView.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, height: 50.0)
-        
-        addSubview(underlineView)
-        underlineView.anchor(left: leftAnchor, bottom: bottomAnchor, width: frame.width / CGFloat(ProfileFilterOption.allCases.count), height: 2.0)
     }
 }
 
@@ -213,10 +202,6 @@ extension ProfileHeaderView: ProfileFilterViewDelegate {
     func profileFilterView(_ filterView: ProfileFilterView, didSelectItemAt indexPath: IndexPath) {
         guard let cell = filterView.filterCollectionView.cellForItem(at: indexPath) as? ProfileFilterCell else {
             return
-        }
-        
-        UIView.animate(withDuration: 0.3) {
-            self.underlineView.frame.origin.x = cell.frame.origin.x
         }
     }
 }

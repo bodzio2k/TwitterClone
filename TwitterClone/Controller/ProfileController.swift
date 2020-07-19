@@ -15,6 +15,23 @@ class ProfileController: RootViewController {
     let headerIdentifer = "profileHeader"
     var user: User
     var tweets: [Tweet]?
+    var likedTweets: [Tweet]?
+    var replies: [Tweet]?
+    var currentDatasource: [Tweet] {
+        switch selectedFilter {
+        case .tweets:
+            return tweets ?? []
+        case .replies:
+            return replies ?? []
+        case .likes:
+            return likedTweets ?? []
+        }
+    }
+    var selectedFilter: ProfileFilterOption  = .tweets {
+        didSet {
+            self.tweetsCollectionView.reloadData()
+        }
+    }
     
     //MARK: Lifecycle
     init(user: User) {
