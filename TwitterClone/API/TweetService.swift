@@ -105,6 +105,21 @@ struct TweetService {
         }        
     }
     
+    func fetchTweetsLiked(by user: User, completion: @escaping ([Tweet]) -> Void) -> Void {
+        var tweets = Array<Tweet>()
+        
+        Globals.userLikes.child(user.uid).observe(.childAdded) { (snapshot) in
+            let tweetId = snapshot.key
+            
+            self.fetchTweet(with: tweetId) { (tweet) in
+                tweet.didLike = true
+                tweets.append(tweet)
+                
+                completion(tweets)
+            }
+        }
+    }
+    
     func fetchReplies(for tweet: Tweet, completion: @escaping ([Tweet]) -> Void) -> Void {
         var replies = Array<Tweet>()
         

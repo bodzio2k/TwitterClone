@@ -56,6 +56,7 @@ class ProfileController: RootViewController {
         
         configureCollectionView()
         fetchTweets()
+        fetchLikedTweets()
         checkIsUserFollowed()
         fetchUserStats()
     }
@@ -102,6 +103,12 @@ class ProfileController: RootViewController {
             self.tweetsCollectionView.reloadData()
         }
     }
+    
+    func fetchLikedTweets() -> Void {
+        TweetService.shared.fetchTweetsLiked(by: user) { (likedTweets) in
+            self.likedTweets = likedTweets
+        }
+    }
 }
 
 extension ProfileController: UICollectionViewDataSource {
@@ -110,11 +117,8 @@ extension ProfileController: UICollectionViewDataSource {
             fatalError()
         }
         
-//        cell.delegate = self
-//
-        if let tweet = tweets?[indexPath.row] {
-            cell.configure(for: tweet)
-        }
+        let tweet = currentDatasource[indexPath.row]
+        cell.configure(for: tweet)
         
         return cell
     }
@@ -124,7 +128,7 @@ extension ProfileController: UICollectionViewDataSource {
     }
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return tweets?.count ?? 0
+        return currentDatasource.count
     }
     
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
@@ -141,7 +145,10 @@ extension ProfileController: UICollectionViewDataSource {
 
 extension ProfileController: UICollectionViewDelegateFlowLayout {
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let size = CGSize(width: view.frame.width, height: 200)
+        let tweet = currentDatasource[indexPath.row]
+        
+        let viewModel = TweetViewModel(tweet: tweet)
+        let size = viewModel.size(for: TweetViewCell.self, width: view.frame.width)
         
         return size
     }
@@ -154,6 +161,10 @@ extension ProfileController: UICollectionViewDelegateFlowLayout {
 }
 
 extension ProfileController: ProfileHeaderViewDelegate {
+    func didSelect(filter: ProfileFilterOption) {
+        selectedFilter = filter
+    }
+    
     func actionButtonTapped(_ user: User) {
         if user.isFollowed {
             UserService.shared.unfollow(user) { (err, ref) in

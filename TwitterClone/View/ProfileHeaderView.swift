@@ -11,6 +11,7 @@ import UIKit
 protocol ProfileHeaderViewDelegate {
     func dismiss()
     func actionButtonTapped(_ user: User)
+    func didSelect(filter: ProfileFilterOption)
 }
 
 class ProfileHeaderView: UICollectionReusableView {
@@ -200,8 +201,10 @@ class ProfileHeaderView: UICollectionReusableView {
 
 extension ProfileHeaderView: ProfileFilterViewDelegate {
     func profileFilterView(_ filterView: ProfileFilterView, didSelectItemAt indexPath: IndexPath) {
-        guard let cell = filterView.filterCollectionView.cellForItem(at: indexPath) as? ProfileFilterCell else {
+        guard let selectedOption = ProfileFilterOption(rawValue: indexPath.row) else {
             return
         }
+        
+        delegate?.didSelect(filter: selectedOption)
     }
 }
