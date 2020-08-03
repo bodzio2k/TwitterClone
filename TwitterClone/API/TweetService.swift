@@ -36,7 +36,11 @@ struct TweetService {
             let tweetReplyRef = Globals.tweetReplies.child(tweet.tweetId).childByAutoId()
             
             tweetReplyRef.updateChildValues(values) { (err, ref) in
-                completion(err, ref)
+                guard let replyId = ref.key else {
+                    return
+                }
+                
+                Globals.userReplies.child(authorId).updateChildValues([tweet.tweetId : replyId], withCompletionBlock: completion)
             }
         }
 
@@ -137,6 +141,36 @@ struct TweetService {
                 replies.append(reply)
                 
                 completion(replies)
+            }
+        }
+    }
+    
+    func fetchReplies(madeBy user: User, completion: @escaping ([Tweet]) -> Void) -> Void {
+        var replies = Array<Tweet>()
+        
+        Globals.userReplies.child(user.uid).observe(.childAdded) { (snapshot) in
+            let tweetId = snapshot.key
+            
+            guard let replyId = snapshot.value as? String else {
+                return
+            }
+            
+            Globals.tweetReplies.child(tweetId).child(replyId).observeSingleEvent(of: .value) { (snapshot) in
+                guard let tweetDictionary = snapshot.value as? TweetDictionary else {
+                    return
+                }
+                
+                guard let authorId = tweetDictionary["authorId"] as? String else {
+                    return
+                }
+                
+                UserService.shared.fetchUser(identifiedBy: authorId) { user in
+                    let tweetId = snapshot.key
+                    let tweet = Tweet(createdBy: user, tweetId: tweetId, dictionary: tweetDictionary)
+                    
+                    replies.append(tweet)
+                    completion(replies)
+                }
             }
         }
     }

@@ -57,6 +57,7 @@ class ProfileController: RootViewController {
         configureCollectionView()
         fetchTweets()
         fetchLikedTweets()
+        fetchUserReplies()
         checkIsUserFollowed()
         fetchUserStats()
     }
@@ -107,6 +108,12 @@ class ProfileController: RootViewController {
     func fetchLikedTweets() -> Void {
         TweetService.shared.fetchTweetsLiked(by: user) { (likedTweets) in
             self.likedTweets = likedTweets
+        }
+    }
+    
+    func fetchUserReplies() -> Void {
+        TweetService.shared.fetchReplies(madeBy: user) { (replies) in
+            self.replies = replies
         }
     }
 }
