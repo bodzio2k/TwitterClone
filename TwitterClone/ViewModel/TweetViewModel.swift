@@ -97,7 +97,7 @@ struct TweetViewModel {
         case is TweetViewCell.Type:
             actualWidth = (width - profilePhotoDimension) - 3.0 * 8.0
             fontSize = 12.0
-            additionalSpace = 82.0
+            additionalSpace = 92.0
         default:
             actualWidth = width
             fontSize = 12.0

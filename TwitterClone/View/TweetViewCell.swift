@@ -57,27 +57,40 @@ class TweetViewCell: UICollectionViewCell {
         return l
     }()
     
+    let replyingToLabel: UILabel = {
+        let l = UILabel()
+        
+        l.font = UIFont.systemFont(ofSize: 12.0)
+        l.textColor = .lightGray
+        l.text = "→ replying to @heath_ledger"
+        l.isHidden = false
+        
+        return l
+    }()
+    
     //MARK: Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
+                
+        let captionStack = UIStackView(arrangedSubviews: [headerLineLabel, tweetCaptionLabel])
+        captionStack.axis = .vertical
         
-        contentView.backgroundColor = .white
+        let profilePhotoStack = UIStackView(arrangedSubviews: [profiePhotoImageView, captionStack])
+        profilePhotoStack.axis = .horizontal
+        profilePhotoStack.spacing = 8.0
+        profilePhotoStack.alignment = .leading
         
-        addSubview(profiePhotoImageView)
-        profiePhotoImageView.anchor(top: safeAreaLayoutGuide.topAnchor, left: leftAnchor, paddingTop: 8.0, paddingLeft: 12.0)
-        
-        addSubview(headerLineLabel)
-        headerLineLabel.anchor(top: profiePhotoImageView.topAnchor, left: profiePhotoImageView.rightAnchor, bottom: nil, right: nil, paddingTop: 0.0, paddingLeft: 8.0, paddingBottom: 0.0, paddingRight: 0.0, width: nil, height: nil)
-        
-        addSubview(tweetCaptionLabel)
-        tweetCaptionLabel.anchor(top: headerLineLabel.bottomAnchor, left: profiePhotoImageView.rightAnchor, bottom: nil, right: rightAnchor, paddingTop: 2.0, paddingLeft: 8.0, paddingBottom: 0.0, paddingRight: 8.0, width: nil, height: nil)
-
         buttons = createButtons()
         let buttonStack = UIStackView(arrangedSubviews: buttons!)
         buttonStack.spacing = 2.0
         buttonStack.axis = .horizontal
         buttonStack.distribution  = .fillProportionally
-
+        
+        let wrapperStack = UIStackView(arrangedSubviews: [replyingToLabel, profilePhotoStack])
+        wrapperStack.axis = .vertical
+        wrapperStack.distribution = .fillProportionally
+        wrapperStack.spacing = 8.0
+        
         let dividerBar = UIView()
         dividerBar.backgroundColor = .systemGroupedBackground
 
@@ -87,6 +100,9 @@ class TweetViewCell: UICollectionViewCell {
         addSubview(buttonStack)
         buttonStack.anchor(top: nil, left: safeAreaLayoutGuide.leftAnchor, bottom: dividerBar.topAnchor, right: rightAnchor, paddingTop: 8.0, paddingBottom: 8.0)
         buttonStack.centerX(inView: self)
+        
+        addSubview(wrapperStack)
+        wrapperStack.anchor(top: self.topAnchor, left: self.leftAnchor, bottom: buttonStack.topAnchor, right: self.rightAnchor, paddingTop: 8.0, paddingLeft: 8.0, paddingBottom: 8.0, paddingRight: 8.0)
     }
     
     required init?(coder: NSCoder) {
