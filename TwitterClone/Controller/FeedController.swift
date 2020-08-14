@@ -148,6 +148,7 @@ extension FeedController: TweetCellDelegate {
             return
         }
         
+        tweet.replyingTo = tweet.author.username
         let newTweetController = NewTweetController(user: tweet.author, config: .reply(tweet))
         let nav = UINavigationController(rootViewController: newTweetController)
         present(nav, animated: true, completion: nil)

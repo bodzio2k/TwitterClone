@@ -62,8 +62,6 @@ class TweetViewCell: UICollectionViewCell {
         
         l.font = UIFont.systemFont(ofSize: 12.0)
         l.textColor = .lightGray
-        l.text = "→ replying to @heath_ledger"
-        l.isHidden = false
         
         return l
     }()
@@ -157,6 +155,8 @@ class TweetViewCell: UICollectionViewCell {
         tweetCaptionLabel.text = tweet.caption
         buttons[2].tintColor = viewModel.likeButtonTintColor
         buttons[2].setImage(viewModel.likeButtonImage, for: .normal)
+        replyingToLabel.isHidden = viewModel.shouldHideReplyingToLabel
+        replyingToLabel.text = viewModel.replyingToLabelText
     }
     
     func reconfigure() -> Void {

@@ -17,6 +17,10 @@ class Tweet {
     let retweets: Int
     let author: User
     var didLike = false
+    var replyingTo: String?
+    var isReply: Bool {
+        return replyingTo != nil
+    }
     
     init(createdBy user: User, tweetId: String, dictionary: TweetDictionary) {
         self.tweetId = tweetId
@@ -28,6 +32,7 @@ class Tweet {
         caption = dictionary["caption"] as? String ?? ""
         likes = dictionary["likes"] as? Int ?? 0
         retweets = dictionary["retweets"] as? Int ?? 0
+        replyingTo = dictionary["replyingTo"] as? String
     }
 }
 

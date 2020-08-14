@@ -19,7 +19,7 @@ struct TweetService {
         
         let timestamp = Int(Date().timeIntervalSince1970)
         
-        let values = ["authorId": authorId, "caption": caption, "timestamp": timestamp, "likes": 0, "retweets": 0] as [String : Any]
+        var values = ["authorId": authorId, "caption": caption, "timestamp": timestamp, "likes": 0, "retweets": 0] as [String : Any]
         
         switch config {
         case .newTweet:
@@ -33,6 +33,12 @@ struct TweetService {
                 Globals.userTweets.child(authorId).updateChildValues([tweetId: 1], withCompletionBlock: completion)
             }
         case .reply(let tweet):
+            guard let replyingTo = tweet.replyingTo else {
+                return
+            }
+            
+            values["replyingTo"] = replyingTo
+            
             let tweetReplyRef = Globals.tweetReplies.child(tweet.tweetId).childByAutoId()
             
             tweetReplyRef.updateChildValues(values) { (err, ref) in

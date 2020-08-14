@@ -97,7 +97,7 @@ struct TweetViewModel {
         case is TweetViewCell.Type:
             actualWidth = (width - profilePhotoDimension) - 3.0 * 8.0
             fontSize = 12.0
-            additionalSpace = 92.0
+            additionalSpace = tweet.isReply ? 96.0 : 72.0
         default:
             actualWidth = width
             fontSize = 12.0
@@ -116,6 +116,14 @@ struct TweetViewModel {
         calculatedSize = CGSize(width: width, height: height)
         
         return calculatedSize
+    }
+    
+    var shouldHideReplyingToLabel: Bool {
+        return !tweet.isReply
+    }
+    
+    var replyingToLabelText: String? {
+        return tweet.isReply ? "→ replying to @\(tweet.replyingTo!)" : nil
     }
     
     init(tweet: Tweet) {
