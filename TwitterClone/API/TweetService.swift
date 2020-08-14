@@ -171,8 +171,7 @@ struct TweetService {
                 }
                 
                 UserService.shared.fetchUser(identifiedBy: authorId) { user in
-                    let tweetId = snapshot.key
-                    let tweet = Tweet(createdBy: user, tweetId: tweetId, dictionary: tweetDictionary)
+                    let tweet = Tweet(createdBy: user, tweetId: replyId, dictionary: tweetDictionary)
                     
                     replies.append(tweet)
                     completion(replies)

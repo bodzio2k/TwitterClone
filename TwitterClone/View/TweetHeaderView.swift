@@ -131,6 +131,15 @@ class TweetHeaderView: UICollectionReusableView {
         return v
     }()
     
+    let replyingToLabel: UILabel = {
+        let l = UILabel()
+        
+        l.font = UIFont.systemFont(ofSize: 12.0)
+        l.textColor = .lightGray
+        
+        return l
+    }()
+    
     func configure(for tweet: Tweet) {
         self.tweet = tweet
         
@@ -147,6 +156,8 @@ class TweetHeaderView: UICollectionReusableView {
         timestampLabel.text = viewModel.timestamp
         likesLabel.attributedText = viewModel.likesAttributedString
         retweetsLabel.attributedText = viewModel.retweetsAttributedString
+        replyingToLabel.isHidden = viewModel.shouldHideReplyingToLabel
+        replyingToLabel.text = viewModel.replyingToLabelText
         
         buttons[2].tintColor = viewModel.likeButtonTintColor
         buttons[2].setImage(viewModel.likeButtonImage, for: .normal)
@@ -164,14 +175,27 @@ class TweetHeaderView: UICollectionReusableView {
         
         backgroundColor = .white
         
-        addSubview(profiePhotoImageView)
-        profiePhotoImageView.anchor(top: safeAreaLayoutGuide.topAnchor, left: leftAnchor, paddingTop: 8.0, paddingLeft: 8.0)
+        //addSubview(profiePhotoImageView)
+        //profiePhotoImageView.anchor(top: safeAreaLayoutGuide.topAnchor, left: leftAnchor, paddingTop: 8.0, paddingLeft: 8.0)
         
-        addSubview(fullnameLabel)
-        fullnameLabel.anchor(top: safeAreaLayoutGuide.topAnchor, left: profiePhotoImageView.rightAnchor, paddingTop: 8.0, paddingLeft: 8.0)
+        let userStack = UIStackView(arrangedSubviews: [fullnameLabel, usernameLabel])
+        userStack.axis = .vertical
+        userStack.distribution = .fillProportionally
+        addSubview(userStack)
         
-        addSubview(usernameLabel)
-        usernameLabel.anchor(top: fullnameLabel.bottomAnchor, left: profiePhotoImageView.rightAnchor, paddingTop: 0.0, paddingLeft: 8.0)
+        let profileStack = UIStackView(arrangedSubviews: [profiePhotoImageView, userStack])
+        profileStack.axis = .horizontal
+        profileStack.distribution = .fillProportionally
+        profileStack.spacing = 8.0
+        profileStack.alignment = .top
+        
+        let wrapperStack = UIStackView(arrangedSubviews: [replyingToLabel, profileStack])
+        wrapperStack.axis = .vertical
+        wrapperStack.spacing = 8.0
+        wrapperStack.distribution = .fillProportionally
+        
+        addSubview(wrapperStack)
+        wrapperStack.anchor(top: topAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 8.0, paddingLeft: 8.0, paddingBottom: 8.0, paddingRight: 8.0)
         
         addSubview(captionLabel)
         captionLabel.anchor(top: profiePhotoImageView.bottomAnchor, left: leftAnchor, bottom: nil, right: rightAnchor, paddingTop: 8.0, paddingLeft: 8.0, paddingBottom: 0.0, paddingRight: 8.0, width: nil, height: nil)
@@ -180,8 +204,8 @@ class TweetHeaderView: UICollectionReusableView {
         timestampLabel.anchor(top: captionLabel.bottomAnchor, left: leftAnchor, paddingTop: 8.0, paddingLeft: 8.0)
 
         addSubview(optionButton)
-        optionButton.anchor(top: safeAreaLayoutGuide.topAnchor, right: rightAnchor, paddingTop: 12.0, paddingRight: 12.0)
-
+        optionButton.anchor(top: wrapperStack.topAnchor, right: rightAnchor, paddingTop: 12.0, paddingRight: 12.0)
+        
         addSubview(statsView)
         statsView.anchor(top: timestampLabel.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 8.0, height: 40.0)
 
