@@ -148,6 +148,13 @@ extension ProfileController: UICollectionViewDataSource {
         
         return header
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let tweet = currentDatasource[indexPath.row]
+        let tweetController = TweetController(tweet: tweet)
+        
+        navigationController?.pushViewController(tweetController, animated: true)
+    }
 }
 
 extension ProfileController: UICollectionViewDelegateFlowLayout {

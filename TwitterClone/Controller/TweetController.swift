@@ -30,11 +30,10 @@ class TweetController: RootViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//
-//        // Do any additional setup after loading the view.
-//    }
+    override func viewWillAppear(_ animated: Bool) {
+        navigationController?.navigationBar.isHidden = false
+        navigationController?.navigationBar.barStyle = .default
+    }
     
     //MARK: API Calls
     func fetchReplies() -> Void {
