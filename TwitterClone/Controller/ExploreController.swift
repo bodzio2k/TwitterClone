@@ -61,11 +61,10 @@ class ExploreController: RootViewController {
         
         tableView.register(UserCell.self, forCellReuseIdentifier: reuseIdentifier)
         tableView.dataSource = self
+        tableView.delegate = self
         
         tableView.rowHeight = 60.0
         tableView.separatorStyle = .none
-        
-        
     }
 }
 
@@ -82,12 +81,14 @@ extension ExploreController: UITableViewDataSource {
         
         return cell
     }
-    
+}
+
+extension ExploreController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let user = isInSearchMode ? filteredUsers[indexPath.row] : users[indexPath.row]
         
         let profileController = ProfileController(user: user)
-        
+
         navigationController?.pushViewController(profileController, animated: true)
     }
 }
