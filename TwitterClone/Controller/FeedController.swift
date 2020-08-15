@@ -29,6 +29,12 @@ class FeedController: RootViewController {
         self.checkUserLikes()
     }
     
+    //MARK: Selectors
+    @objc func refresh() {
+        tweetsCollectionView.refreshControl?.beginRefreshing()
+        fetchTweets()
+    }
+    
     //MARK: API
     fileprivate func fetchTweets() {
         TweetService.shared.fetchTweets { (tweets, error) in
@@ -44,12 +50,18 @@ class FeedController: RootViewController {
             
             self.tweetsCollectionView.reloadData()
             self.checkUserLikes()
+            
+            self.tweetsCollectionView.refreshControl?.endRefreshing()
         }
     }
     
     fileprivate func checkUserLikes() {
-        for (index, tweet) in tweets.enumerated() {
+        tweets.forEach { (tweet) in
             TweetService.shared.checkIfUserLikes(tweet) { (didLike) in
+                guard let index = self.tweets.firstIndex(where: {$0.tweetId == tweet.tweetId}) else {
+                    return
+                }
+                
                 self.tweets[index].didLike = didLike
                 let indexPath = IndexPath(row: index, section: 0)
                 self.tweetsCollectionView.reloadItems(at: [indexPath])
@@ -69,6 +81,10 @@ class FeedController: RootViewController {
         tweetsCollectionView.dataSource = self
         
         tweetsCollectionView.register(TweetViewCell.self, forCellWithReuseIdentifier: cellIdentifier)
+        
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refresh), for: .valueChanged)
+        tweetsCollectionView.refreshControl = refreshControl
     }
     
     override func configureUI() {
