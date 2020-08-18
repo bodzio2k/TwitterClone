@@ -180,6 +180,15 @@ extension ProfileController: ProfileHeaderViewDelegate {
     }
     
     func actionButtonTapped(_ user: User) {
+        if user.isCurrentUser {
+            let controller = EditProfileController(user: user)
+            let nav = UINavigationController(rootViewController: controller)
+            
+            controller.delegate = self
+            nav.modalPresentationStyle = .fullScreen
+            present(nav, animated: true)
+        }
+        
         if user.isFollowed {
             UserService.shared.unfollow(user) { (err, ref) in
                 if let err = err {
@@ -203,5 +212,12 @@ extension ProfileController: ProfileHeaderViewDelegate {
         navigationController?.navigationBar.barStyle = .default
         
         navigationController?.popViewController(animated: true)
+    }
+}
+
+extension ProfileController: EditProfileControllerDelegate {
+    func controller(_ controller: EditProfileController, updates user: User) {
+        self.user = user
+        self.tweetsCollectionView.reloadData()
     }
 }

@@ -113,4 +113,40 @@ class UserService {
             }
         }
     }
+    
+    func updataProfile(for user: User, completion: @escaping DatabaseCompletion) -> Void {
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+        let userData = ["username": user.username, "fullname": user.fullname, "bio": user.bio ?? ""]
+        Globals.users.child(uid).updateChildValues(userData, withCompletionBlock: completion)
+    }
+    
+    func updateProfilePhoto(with image: UIImage, completion: @escaping (URL) -> Void) -> Void {
+        guard let jpegData = image.jpegData(compressionQuality: 1.0) else {
+            return
+        }
+        
+        guard let uid = Auth.auth().currentUser?.uid else {
+            return
+        }
+        
+        let filename = UUID().uuidString + ".jpeg"
+        let ref = Globals.profileImages.child(filename)
+        
+        ref.putData(jpegData, metadata: nil) { (meta, err) in
+            ref.downloadURL { (url, err) in
+                guard let profilPhotoUrl = url else {
+                    return
+                }
+                
+                let values = ["profilePhotoURL": profilPhotoUrl.absoluteString]
+                
+                Globals.users.child(uid).updateChildValues(values) { (err, ref) in
+                    completion(profilPhotoUrl)
+                }
+            }
+        }
+    }
 }

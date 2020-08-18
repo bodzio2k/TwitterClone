@@ -36,6 +36,8 @@ class ProfileHeaderView: UICollectionReusableView {
             profileNameLabel.text = user.fullname
             usernameLabel.text = "@\(user.username)"
             
+            bioLabel.text = user.bio
+            
             actionButton.setTitle(viewModel.actionButtonTitle, for: .normal)
         }
     }
