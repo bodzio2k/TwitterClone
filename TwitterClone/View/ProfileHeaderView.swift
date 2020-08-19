@@ -106,9 +106,9 @@ class ProfileHeaderView: UICollectionReusableView {
     let bioLabel: UILabel = {
         let l = UILabel()
         
-        l.text = "Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit..."
         l.font = UIFont.systemFont(ofSize: 14.0)
-        l.numberOfLines = 3
+        l.numberOfLines = 0
+        l.lineBreakMode = .byWordWrapping
         
         return l
     }()
@@ -180,21 +180,21 @@ class ProfileHeaderView: UICollectionReusableView {
         actionButton.setDimensions(width: 128, height: 32.0)
         actionButton.layer.cornerRadius = 16.0
         
-        addSubview(profileNameLabel)
-        profileNameLabel.anchor(top: profileImageView.bottomAnchor, left: leftAnchor, paddingTop: 8.0, paddingLeft: 20.0)
-    
-        addSubview(usernameLabel)
-        usernameLabel.anchor(top: profileNameLabel.bottomAnchor, left: leftAnchor, paddingLeft: 20.0)
-     
-        addSubview(bioLabel)
-        bioLabel.anchor(top: usernameLabel.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 8.0, paddingLeft: 20.0, paddingRight: 16.0)
+        let wrapperStack = UIStackView(arrangedSubviews: [profileNameLabel, usernameLabel, bioLabel])
+        wrapperStack.axis = .vertical
+        wrapperStack.distribution = .fillProportionally
+        wrapperStack.spacing = 4.0
         
+        addSubview(wrapperStack)
+        wrapperStack.anchor(top: profileImageView.bottomAnchor, left: leftAnchor, right: rightAnchor, paddingTop: 8.0, paddingLeft: 8.0, paddingRight: 20.0)
+
         let followingStack = UIStackView(arrangedSubviews: [followingLabel, followersLabel])
         followingStack.axis = .horizontal
-        followingStack.distribution = .fillEqually
+        followingStack.distribution = .fill
         followingStack.spacing = 8.0
+        
         addSubview(followingStack)
-        followingStack.anchor(top: bioLabel.bottomAnchor, left: leftAnchor, paddingTop: 8.0, paddingLeft: 16.0, paddingRight: 16.0)
+        followingStack.anchor(top: wrapperStack.bottomAnchor, left: leftAnchor, right: nil, paddingTop: 4.0, paddingLeft: 8.0, paddingRight: 20.0)
         
         addSubview(filterView)
         filterView.anchor(left: leftAnchor, bottom: bottomAnchor, right: rightAnchor, height: 50.0)
