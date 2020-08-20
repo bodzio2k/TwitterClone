@@ -149,4 +149,14 @@ class UserService {
             }
         }
     }
+    
+    func fetchUser(withUsername username: String, completion: @escaping (User) -> Void) -> Void {
+        Globals.usernames.child(username).observeSingleEvent(of: .value) { (snapshot) in
+            guard let uid = snapshot.value as? String else {
+                return
+            }
+            
+            self.fetchUser(identifiedBy: uid, completion: completion)
+        }
+    }
 }

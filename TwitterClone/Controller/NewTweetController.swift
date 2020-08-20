@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import ActiveLabel
 
 enum NewTweetConfiguration {
     case newTweet
@@ -46,11 +47,12 @@ class NewTweetController: RootViewController {
         return iv
     }()
     let captionTexView = CaptionTextView()
-    lazy var replyToLabel: UILabel = {
-        let l = UILabel()
+    lazy var replyToLabel: ActiveLabel = {
+        let l = ActiveLabel()
         
         l.font = UIFont.systemFont(ofSize: 12.0)
         l.textColor = .lightGray
+        l.mentionColor = .twitterBlue
         
         return l
     }()

@@ -122,6 +122,13 @@ extension TweetController: UICollectionViewDelegateFlowLayout {
 }
 
 extension TweetController: TweetHeaderViewDelegate {
+    func fetchMentionedUser(withUsername username: String) {
+        UserService.shared.fetchUser(withUsername: username) { (user) in
+            let controller = ProfileController(user: user)
+            self.navigationController?.pushViewController(controller, animated: true)
+        }
+    }
+    
     func likeButtonTapped(at headerView: TweetHeaderView) {
         guard let tweet = headerView.tweet else {
             return
@@ -170,8 +177,6 @@ extension TweetController: TweetHeaderViewDelegate {
             }
         }
     }
-    
-    
 }
 
 extension TweetController: ActionSheetLauncherDelegate {

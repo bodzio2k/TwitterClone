@@ -7,12 +7,14 @@
 //
 
 import UIKit
+import ActiveLabel
 
 protocol TweetHeaderViewDelegate: class {
     func optionButtonTapped()
     func profilePhotoImageViewTapped()
     func replyButtonTapped()
     func likeButtonTapped(at headerView: TweetHeaderView)
+    func fetchMentionedUser(withUsername username: String)
 }
 
 class TweetHeaderView: UICollectionReusableView {
@@ -55,12 +57,14 @@ class TweetHeaderView: UICollectionReusableView {
         return l
     }()
     
-    let captionLabel: UILabel = {
-        let l = UILabel()
+    let captionLabel: ActiveLabel = {
+        let l = ActiveLabel()
         
         l.font = UIFont.systemFont(ofSize: 20.0)
         l.numberOfLines = 0
         l.lineBreakMode = .byWordWrapping
+        l.mentionColor = .twitterBlue
+        l.hashtagColor = .twitterBlue
         
         return l
     }()
@@ -169,6 +173,12 @@ class TweetHeaderView: UICollectionReusableView {
         }
     }
     
+    func configureMentionTap() -> Void {
+        captionLabel.handleMentionTap { (mentionedUser) in
+            self.delegate?.fetchMentionedUser(withUsername: mentionedUser)
+        }
+    }
+    
     //MARK: Lifecycle
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -216,6 +226,8 @@ class TweetHeaderView: UICollectionReusableView {
         
         addSubview(buttonStack)
         buttonStack.anchor(top: statsView.bottomAnchor, left: safeAreaLayoutGuide.leftAnchor, bottom: bottomAnchor, right: rightAnchor, paddingTop: 8.0)
+        
+        configureMentionTap()
     }
     
     required init?(coder: NSCoder) {

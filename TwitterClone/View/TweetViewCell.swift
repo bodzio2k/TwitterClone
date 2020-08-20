@@ -7,11 +7,13 @@
 //
 
 import UIKit
+import ActiveLabel
 
 protocol TweetCellDelegate: class {
     func profilePhotoImageViewTapped(at cell: TweetViewCell)
     func replyButtonTapped(at cell: TweetViewCell)
     func likeButtonTapped(at cell: TweetViewCell)
+    func fetchMentionedUser(withUsername username: String)
 }
 
 class TweetViewCell: UICollectionViewCell {
@@ -46,22 +48,25 @@ class TweetViewCell: UICollectionViewCell {
         return l
     }()
     
-    let tweetCaptionLabel: UILabel = {
-        let l = UILabel()
+    let tweetCaptionLabel: ActiveLabel = {
+        let l = ActiveLabel()
         
         l.font = UIFont.systemFont(ofSize: 12.0)
         l.numberOfLines = 0
         l.lineBreakMode = .byWordWrapping
         l.setContentHuggingPriority(.defaultHigh, for: .vertical)
+        l.mentionColor = .twitterBlue
+        l.hashtagColor = .twitterBlue
         
         return l
     }()
     
-    let replyingToLabel: UILabel = {
-        let l = UILabel()
+    let replyingToLabel: ActiveLabel = {
+        let l = ActiveLabel()
         
         l.font = UIFont.systemFont(ofSize: 12.0)
         l.textColor = .lightGray
+        l.mentionColor = .twitterBlue
         
         return l
     }()
@@ -101,6 +106,8 @@ class TweetViewCell: UICollectionViewCell {
         
         addSubview(wrapperStack)
         wrapperStack.anchor(top: self.topAnchor, left: self.leftAnchor, bottom: buttonStack.topAnchor, right: self.rightAnchor, paddingTop: 8.0, paddingLeft: 8.0, paddingBottom: 8.0, paddingRight: 8.0)
+        
+        configureMentionTap()
     }
     
     required init?(coder: NSCoder) {
@@ -157,6 +164,12 @@ class TweetViewCell: UICollectionViewCell {
         buttons[2].setImage(viewModel.likeButtonImage, for: .normal)
         replyingToLabel.isHidden = viewModel.shouldHideReplyingToLabel
         replyingToLabel.text = viewModel.replyingToLabelText
+    }
+    
+    func configureMentionTap() {
+        tweetCaptionLabel.handleMentionTap { (username) in
+            self.delegate?.fetchMentionedUser(withUsername: username)
+        }
     }
     
     func reconfigure() -> Void {
