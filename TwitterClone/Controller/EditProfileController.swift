@@ -10,6 +10,7 @@ import UIKit
 
 protocol EditProfileControllerDelegate: class {
     func controller(_ controller: EditProfileController, updates user: User)
+    func logout()
 }
 
 class EditProfileController: RootViewController {
@@ -36,6 +37,16 @@ class EditProfileController: RootViewController {
             rightBarButtonItem?.isEnabled = true
         }
     }
+    private lazy var logoutButton: UIButton = {
+        let b = UIButton()
+        
+        b.setTitle("Logout", for: .normal)
+        b.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18.0)
+        b.setTitleColor(.red, for: .normal)
+        b.addTarget(self, action: #selector(logout), for: .touchUpInside)
+        
+        return b
+    }()
     weak var delegate: EditProfileControllerDelegate?
     
     init(user: User) {
@@ -77,8 +88,11 @@ class EditProfileController: RootViewController {
     override func configureUI() {
         super.configureUI()
         
-        self.view.addSubview(tableView)
-        tableView.addConstraintsToFillView(self.view)
+        view.addSubview(logoutButton)
+        logoutButton.anchor(left: view.leftAnchor, bottom: view.bottomAnchor, right: view.rightAnchor, paddingTop: 8.0, paddingLeft: 8.0, paddingBottom: 8.0, paddingRight: 8.0, height: 50.0)
+        
+        view.addSubview(tableView)
+        tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: logoutButton.topAnchor, right: view.rightAnchor, paddingTop: 0.0, paddingLeft: 0.0, paddingBottom: 8.0, paddingRight: 0.0)
         
         rightBarButtonItem?.isEnabled = false
     }
@@ -109,6 +123,10 @@ class EditProfileController: RootViewController {
         if userProfileChanded {
             updateUserData()
         }
+    }
+    
+    @objc func logout() {
+        delegate?.logout()
     }
     
     //MARK: API

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Firebase
 
 class ProfileController: RootViewController {
     //MARK: Properties
@@ -219,6 +220,32 @@ extension ProfileController: ProfileHeaderViewDelegate {
 }
 
 extension ProfileController: EditProfileControllerDelegate {
+    func logout() {
+        let alert = UIAlertController(title: nil, message: "Are You sure?", preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(title: "Logout", style: .destructive, handler: { (_) in
+            self.dismiss(animated: true) {
+                try? Auth.auth().signOut()
+                
+                let nav = UINavigationController(rootViewController: LoginController())
+                
+                nav.modalPresentationStyle = .fullScreen
+                self.present(nav, animated: true, completion: nil)
+            }
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        
+                guard let keyWindow = UIApplication.shared.windows.first(where: {$0.isKeyWindow}),
+                    let rootViewController = keyWindow.rootViewController,
+                    let presentedViewController = rootViewController.presentedViewController
+                else {
+                    return
+        }
+        
+        presentedViewController.present(alert, animated: false, completion: nil)
+    }
+    
     func controller(_ controller: EditProfileController, updates user: User) {
         self.user = user
         self.tweetsCollectionView.reloadData()
