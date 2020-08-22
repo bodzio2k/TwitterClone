@@ -25,7 +25,7 @@ class EditProfileController: RootViewController {
     private let imagePicker = UIImagePickerController()
     private var selectedImage: UIImage? {
         didSet {
-            rightBarButtonItem?.isEnabled = true
+            navigationItem.rightBarButtonItem?.isEnabled = true
             headerView.profileImageView.image = selectedImage
         }
     }
@@ -34,7 +34,7 @@ class EditProfileController: RootViewController {
     }
     private var userProfileChanded: Bool = false {
         didSet {
-            rightBarButtonItem?.isEnabled = true
+            navigationItem.rightBarButtonItem?.isEnabled = true
         }
     }
     private lazy var logoutButton: UIButton = {
@@ -75,8 +75,8 @@ class EditProfileController: RootViewController {
     
     override func viewDidLoad() {
         navigationItemTitle = "Edit Profile"
-        leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
-        rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(cancel))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(barButtonSystemItem: .done, target: self, action: #selector(done))
         
         configureNavigationBar()
         configureTableView()
@@ -94,7 +94,7 @@ class EditProfileController: RootViewController {
         view.addSubview(tableView)
         tableView.anchor(top: view.topAnchor, left: view.leftAnchor, bottom: logoutButton.topAnchor, right: view.rightAnchor, paddingTop: 0.0, paddingLeft: 0.0, paddingBottom: 8.0, paddingRight: 0.0)
         
-        rightBarButtonItem?.isEnabled = false
+        navigationItem.rightBarButtonItem?.isEnabled = false
     }
     
     func configureTableView() {

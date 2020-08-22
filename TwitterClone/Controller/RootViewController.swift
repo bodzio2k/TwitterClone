@@ -12,9 +12,8 @@ import SDWebImage
 class RootViewController: UIViewController {
     var navigationItemView: UIView?
     var navigationItemTitle: String?
-    var leftBarButtonItem: UIBarButtonItem?
-    var rightBarButtonItem: UIBarButtonItem?
     var profiePhotoImageView: UIImageView = UIImageView()
+    let profilePhotoSize: CGFloat = 32.0
     var currentUser: User? {
         didSet {
             print("User did set.")
@@ -25,13 +24,13 @@ class RootViewController: UIViewController {
             
             let placeholderImage = UIImage(systemName: "person.crop.circle")
             
-            profiePhotoImageView.sd_setImage(with: profilePhotoURL, placeholderImage: placeholderImage) { (image, error, cacheType, url) in
-                return
-            }
+            profiePhotoImageView.sd_setImage(with: profilePhotoURL, placeholderImage: placeholderImage)
+            profiePhotoImageView.contentMode = .scaleAspectFit
+            profiePhotoImageView.layer.cornerRadius = profilePhotoSize / 2.0
+            profiePhotoImageView.layer.masksToBounds = true
+            profiePhotoImageView.setDimensions(width: profilePhotoSize, height: profilePhotoSize)
             
-            leftBarButtonItem = UIBarButtonItem(customView: profiePhotoImageView)
-        
-            navigationItem.leftBarButtonItem = leftBarButtonItem
+            navigationItem.leftBarButtonItem = UIBarButtonItem(customView: profiePhotoImageView)
         }
     }
     
@@ -42,7 +41,6 @@ class RootViewController: UIViewController {
     }
     
     func configureUI() {
-        let profilePhotoSize: CGFloat = 32.0
         view.backgroundColor = .white
         
         if let imageView = navigationItemView {
@@ -53,19 +51,6 @@ class RootViewController: UIViewController {
         }
         else {
             navigationItem.title = navigationItemTitle ?? ""
-        }
-        
-        profiePhotoImageView.contentMode = .scaleAspectFit
-        profiePhotoImageView.layer.cornerRadius = profilePhotoSize / 2.0
-        profiePhotoImageView.layer.masksToBounds = true
-        profiePhotoImageView.setDimensions(width: profilePhotoSize, height: profilePhotoSize)
-        
-        if let leftBarButtonItem = leftBarButtonItem {
-            navigationItem.leftBarButtonItem = leftBarButtonItem
-        }
-        
-        if let rightBarButtonItem = rightBarButtonItem {
-            navigationItem.rightBarButtonItem = rightBarButtonItem
         }
     }
 }

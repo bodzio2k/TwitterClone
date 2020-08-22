@@ -70,8 +70,8 @@ class NewTweetController: RootViewController {
     }
     
     override func viewDidLoad() {
-        leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(onCancel))
-        rightBarButtonItem = UIBarButtonItem(customView: newTweetButton)
+        navigationItem.leftBarButtonItem = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(onCancel))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(customView: newTweetButton)
         
         super.viewDidLoad()
     }
