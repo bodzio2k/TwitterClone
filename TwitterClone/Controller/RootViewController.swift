@@ -23,12 +23,14 @@ class RootViewController: UIViewController {
             }
             
             let placeholderImage = UIImage(systemName: "person.crop.circle")
+            let tap = UITapGestureRecognizer(target: self, action: #selector(leftBarButtonItemTapped))
             
             profiePhotoImageView.sd_setImage(with: profilePhotoURL, placeholderImage: placeholderImage)
             profiePhotoImageView.contentMode = .scaleAspectFit
             profiePhotoImageView.layer.cornerRadius = profilePhotoSize / 2.0
             profiePhotoImageView.layer.masksToBounds = true
             profiePhotoImageView.setDimensions(width: profilePhotoSize, height: profilePhotoSize)
+            profiePhotoImageView.addGestureRecognizer(tap)
             
             navigationItem.leftBarButtonItem = UIBarButtonItem(customView: profiePhotoImageView)
         }
@@ -52,5 +54,20 @@ class RootViewController: UIViewController {
         else {
             navigationItem.title = navigationItemTitle ?? ""
         }
+    }
+    
+    @objc func leftBarButtonItemTapped() {
+        guard let user = currentUser else {
+            return
+        }
+        
+        let controller = EditProfileController(user: user)
+        
+        let nav = UINavigationController(rootViewController: controller)
+        
+        nav.modalPresentationStyle = .fullScreen
+        nav.navigationBar.barStyle = .black
+        
+        present(nav, animated: true)
     }
 }
