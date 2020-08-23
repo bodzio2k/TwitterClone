@@ -8,12 +8,18 @@
 
 import UIKit
 import SDWebImage
+import Firebase
+
+@objc protocol LogoutDelegate: class {
+    @objc func logout(_ controller: RootViewController) -> Void
+}
 
 class RootViewController: UIViewController {
     var navigationItemView: UIView?
     var navigationItemTitle: String?
     var profiePhotoImageView: UIImageView = UIImageView()
     let profilePhotoSize: CGFloat = 32.0
+    weak var logoutDelegate: LogoutDelegate?
     var currentUser: User? {
         didSet {
             print("User did set.")
@@ -38,7 +44,9 @@ class RootViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
+        logoutDelegate = self
+        
         configureUI()
     }
     
@@ -69,5 +77,31 @@ class RootViewController: UIViewController {
         nav.navigationBar.barStyle = .black
         
         present(nav, animated: true)
+    }
+}
+
+extension RootViewController: LogoutDelegate {
+    func logout(_ controller: RootViewController) {
+        let alert = UIAlertController(title: nil, message: "Are You sure?", preferredStyle: .actionSheet)
+        
+        guard let keyWindow = UIApplication.shared.windows.first(where: {$0.isKeyWindow}), let rootViewController = keyWindow.rootViewController else {
+                return
+        }
+        
+        
+        alert.addAction(UIAlertAction(title: "Logout", style: .destructive, handler: { (_) in
+            controller.dismiss(animated: true) {
+                try? Auth.auth().signOut()
+                
+                let nav = UINavigationController(rootViewController: LoginController())
+                
+                nav.modalPresentationStyle = .fullScreen
+                rootViewController.present(nav, animated: true, completion: nil)
+            }
+        }))
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+       
+        controller.present(alert, animated: false, completion: nil)
     }
 }

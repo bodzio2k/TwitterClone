@@ -10,7 +10,6 @@ import UIKit
 
 protocol EditProfileControllerDelegate: class {
     func controller(_ controller: EditProfileController, updates user: User)
-    func logout()
 }
 
 class EditProfileController: RootViewController {
@@ -43,7 +42,7 @@ class EditProfileController: RootViewController {
         b.setTitle("Logout", for: .normal)
         b.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18.0)
         b.setTitleColor(.red, for: .normal)
-        b.addTarget(self, action: #selector(logout), for: .touchUpInside)
+        b.addTarget(self, action: #selector(logoutButtonTapped), for: .touchUpInside)
         
         return b
     }()
@@ -109,6 +108,10 @@ class EditProfileController: RootViewController {
     }
     
     //MARK: Selectors
+    @objc func logoutButtonTapped() {
+        logoutDelegate?.logout(self)
+    }
+    
     @objc func cancel() {
         dismiss(animated: true, completion: nil)
     }
@@ -123,10 +126,6 @@ class EditProfileController: RootViewController {
         if userProfileChanded {
             updateUserData()
         }
-    }
-    
-    @objc func logout() {
-        delegate?.logout()
     }
     
     //MARK: API
