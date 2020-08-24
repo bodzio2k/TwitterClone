@@ -80,6 +80,7 @@ class LoginController: UIViewController {
             
             mainController.authenicateAndConfigureUI()
             
+            self.view.window?.frame.origin = .zero
             self.dismiss(animated: true, completion: nil)
         }
     }
