@@ -20,8 +20,23 @@ class LoginController: UIViewController {
         return iv
     }()
     
-    let emailTextField = UITextField()
-    let passwordTextField = UITextField()
+    let emailTextField: UITextField = {
+        let tf = UITextField()
+        
+        tf.returnKeyType = .next
+        tf.keyboardType = .emailAddress
+        tf.textContentType = .oneTimeCode
+        
+        return tf
+    }()
+    let passwordTextField: UITextField = {
+        let tf = UITextField()
+        
+        tf.returnKeyType = .go
+        tf.textContentType = .oneTimeCode
+        
+        return tf
+    }()
     
     let loginButton: UIButton = {
         let b = UIButton(type: .system)
@@ -44,7 +59,7 @@ class LoginController: UIViewController {
         return b
     }()
     
-    //MARK Selectors
+    //MARK: Selectors
     @objc func onLogin() {
         guard let email = emailTextField.text, let password = passwordTextField.text else {
             return
@@ -75,11 +90,65 @@ class LoginController: UIViewController {
         navigationController?.pushViewController(destinationController, animated: true)
     }
     
+    
+    @objc func onKeyboardDidShow(notification: NSNotification) {
+//        guard passwordTextField.isFirstResponder else {
+//            return
+//        }
+        
+        guard let loginButtonGlobalPoint = loginButton.superview?.convert(loginButton.frame.origin, to: nil) else {
+            return
+        }
+        
+        guard let userInfo = notification.userInfo else {
+            return
+        }
+        
+        guard let keyboardheight = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.size.height else {
+            return
+        }
+        
+        let viewHeight = self.view.frame.size.height
+        let loginButtonLowerY = loginButtonGlobalPoint.y + loginButton.frame.height
+        let obscuredAreaHeight: CGFloat = loginButtonLowerY - (viewHeight - keyboardheight)
+        let viewShouldShiftUp = obscuredAreaHeight > 0.00
+        let topMargin: CGFloat = 8.0
+        
+        if viewShouldShiftUp {
+            let shiftBy: CGFloat  = -1.00 * (obscuredAreaHeight + topMargin)
+            self.view.window?.frame.origin.y = shiftBy
+            
+            return
+        }
+        
+        return
+    }
+    
+    @objc func onKeyboardDidHide(notification: NSNotification) -> Void {
+        return
+    }
+    
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
 
         configureUI()
+        
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(onKeyboardDidShow(notification:)), name: UIResponder.keyboardDidShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onKeyboardDidHide(notification:)), name: UIResponder.keyboardDidHideNotification, object: self)
+    }
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidShowNotification, object: self)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidHideNotification, object: self)
     }
     
     //MARK: Helpers
@@ -109,5 +178,27 @@ class LoginController: UIViewController {
 
         view.addSubview(signupButton)
         signupButton.anchor(left: view.safeAreaLayoutGuide.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.safeAreaLayoutGuide.rightAnchor, paddingLeft: 8.0, paddingRight: 8.0)
+    }
+}
+
+extension LoginController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        var shouldReturn = false
+        
+        if textField == emailTextField {
+            passwordTextField.becomeFirstResponder()
+            
+            shouldReturn = true
+        }
+        
+        if textField == passwordTextField {
+            DispatchQueue.main.async {
+                self.onLogin()
+            }
+            
+            shouldReturn = true
+        }
+        
+        return shouldReturn
     }
 }
