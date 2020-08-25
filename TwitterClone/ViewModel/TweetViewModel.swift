@@ -32,7 +32,7 @@ struct TweetViewModel {
         
         fullname = NSAttributedString(string: user.fullname, attributes: [.font: UIFont.boldSystemFont(ofSize: 12.0)])
         username = NSAttributedString(string: " @\(user.username)", attributes: [.font: UIFont.systemFont(ofSize: 12.0), .foregroundColor: UIColor.lightGray])
-        timestamp = NSAttributedString(string: " • \(componentsFormatter.string(from: tweet.timestamp, to: now)!)", attributes: [.font: UIFont.systemFont(ofSize: 12.0), .foregroundColor: UIColor.lightGray])
+        timestamp = NSAttributedString(string: " • \(componentsFormatter.string(from: tweet.timestamp, to: now)!) ago", attributes: [.font: UIFont.systemFont(ofSize: 12.0), .foregroundColor: UIColor.lightGray])
         
         headerLine.append(fullname)
         headerLine.append(username)
@@ -130,9 +130,10 @@ struct TweetViewModel {
         self.tweet = tweet
         self.user = tweet.author
         
-        componentsFormatter.allowedUnits = [.second, .minute, .weekday]
+        componentsFormatter.allowedUnits = [.second, .minute, .hour, .day, .weekOfMonth, .month, .year]
         componentsFormatter.maximumUnitCount = 1
-        componentsFormatter.unitsStyle = .brief
+        componentsFormatter.unitsStyle = .full
+        componentsFormatter.collapsesLargestUnit = true
         
         dateFormatter.dateStyle = .long
     }
