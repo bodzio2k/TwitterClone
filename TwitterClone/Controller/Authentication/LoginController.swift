@@ -29,6 +29,7 @@ class LoginController: UIViewController {
         
         return tf
     }()
+    
     let passwordTextField: UITextField = {
         let tf = UITextField()
         
@@ -143,13 +144,13 @@ class LoginController: UIViewController {
         super.viewWillAppear(animated)
         
         NotificationCenter.default.addObserver(self, selector: #selector(onKeyboardDidShow(notification:)), name: UIResponder.keyboardDidShowNotification, object: nil)
-        NotificationCenter.default.addObserver(self, selector: #selector(onKeyboardDidHide(notification:)), name: UIResponder.keyboardDidHideNotification, object: self)
+        NotificationCenter.default.addObserver(self, selector: #selector(onKeyboardDidHide(notification:)), name: UIResponder.keyboardDidHideNotification, object: nil)
     }
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidShowNotification, object: self)
-        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidHideNotification, object: self)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidHideNotification, object: nil)
     }
     
     //MARK: Helpers

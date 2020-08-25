@@ -41,7 +41,23 @@ class TweetController: RootViewController {
             self.replies = replies
             
             self.repliesCollectionView.reloadData()
+            self.checkUserLikes(completion: nil)
         }
+    }
+    
+    fileprivate func checkUserLikes(completion: (() -> Void)?) {
+        replies.forEach { (tweet) in
+            TweetService.shared.checkIfUserLikes(tweet) { (didLike) in
+                guard let index = self.replies.firstIndex(where: {$0.tweetId == tweet.tweetId}) else {
+                    return
+                }
+                
+                self.replies[index].didLike = didLike
+                let indexPath = IndexPath(row: index, section: 0)
+                self.repliesCollectionView.reloadItems(at: [indexPath])
+            }
+        }
+        completion?()
     }
     
     //MARK: Helper
@@ -209,7 +225,8 @@ extension TweetController: TweetCellDelegate {
         tweet.likes = likes
         
         TweetService.shared.like(tweet) { (err, ref) in
-            return
+            tweet.didLike.toggle()
+            cell.configure(for: tweet)
         }
     }
     

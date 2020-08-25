@@ -21,6 +21,7 @@ class Tweet {
     var isReply: Bool {
         return replyingTo != nil
     }
+    var originalTweetId: String?
     
     init(createdBy user: User, tweetId: String, dictionary: TweetDictionary) {
         self.tweetId = tweetId
@@ -33,6 +34,7 @@ class Tweet {
         likes = dictionary["likes"] as? Int ?? 0
         retweets = dictionary["retweets"] as? Int ?? 0
         replyingTo = dictionary["replyingTo"] as? String
+        originalTweetId = dictionary["originalTweetId"] as? String
     }
 }
 

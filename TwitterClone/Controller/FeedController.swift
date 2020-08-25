@@ -26,7 +26,7 @@ class FeedController: RootViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         
-        self.checkUserLikes()
+        self.checkUserLikes(completion: nil)
     }
     
     //MARK: Selectors
@@ -48,14 +48,18 @@ class FeedController: RootViewController {
                 })
             }
             
-            self.tweetsCollectionView.reloadData()
-            self.checkUserLikes()
-            
-            self.tweetsCollectionView.refreshControl?.endRefreshing()
+            self.tweetsCollectionView.performBatchUpdates({
+                self.tweetsCollectionView.reloadData()
+                self.checkUserLikes(completion: nil)
+            }) { (_) in
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                    self.tweetsCollectionView.refreshControl?.endRefreshing()
+                }
+            }
         }
     }
     
-    fileprivate func checkUserLikes() {
+    fileprivate func checkUserLikes(completion: (() -> Void)?) {
         tweets.forEach { (tweet) in
             TweetService.shared.checkIfUserLikes(tweet) { (didLike) in
                 guard let index = self.tweets.firstIndex(where: {$0.tweetId == tweet.tweetId}) else {
@@ -67,6 +71,7 @@ class FeedController: RootViewController {
                 self.tweetsCollectionView.reloadItems(at: [indexPath])
             }
         }
+        completion?()
     }
     
     //MARK: Helpers
@@ -162,7 +167,7 @@ extension FeedController: TweetCellDelegate {
             cell.tweet?.likes = likes
             cell.configure(for: tweet)
             
-            self.checkUserLikes()
+            self.checkUserLikes(completion: nil)
         }
     }
     
@@ -172,10 +177,11 @@ extension FeedController: TweetCellDelegate {
         }
         
         tweet.replyingTo = tweet.author.username
+        tweet.originalTweetId = tweet.tweetId
         let newTweetController = NewTweetController(user: tweet.author, config: .reply(tweet))
         let nav = UINavigationController(rootViewController: newTweetController)
+   
         present(nav, animated: true, completion: nil)
-        
     }
     
     func profilePhotoImageViewTapped(at cell: TweetViewCell) {

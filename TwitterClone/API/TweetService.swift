@@ -33,11 +33,12 @@ struct TweetService {
                 Globals.userTweets.child(authorId).updateChildValues([tweetId: 1], withCompletionBlock: completion)
             }
         case .reply(let tweet):
-            guard let replyingTo = tweet.replyingTo else {
+            guard let replyingTo = tweet.replyingTo, let originalTweetId = tweet.originalTweetId else {
                 return
             }
             
             values["replyingTo"] = replyingTo
+            values["originalTweetId"] = originalTweetId
             
             let tweetReplyRef = Globals.tweetReplies.child(tweet.tweetId).childByAutoId()
             
@@ -74,7 +75,7 @@ struct TweetService {
         
         Globals.userTweets.child(currentUserId).observe(.childAdded) { snapshot in
             let tweetId = snapshot.key
-            
+
             self.fetchTweet(with: tweetId) { tweet in
                 tweets.append(tweet)
                 completion(tweets, nil)
@@ -169,7 +170,8 @@ struct TweetService {
             }
             
             UserService.shared.fetchUser(identifiedBy: uid) { (user) in
-                let reply = Tweet(createdBy: user, tweetId: tweet.tweetId, dictionary: replyDictionary)
+                let tweetId = snapshot.key
+                let reply = Tweet(createdBy: user, tweetId: tweetId, dictionary: replyDictionary)
                 replies.append(reply)
                 
                 completion(replies)
@@ -211,7 +213,13 @@ struct TweetService {
             return
         }
         
-        Globals.tweets.child(tweet.tweetId).child("likes").setValue(tweet.likes)
+        if tweet.isReply && tweet.originalTweetId != nil {
+            Globals.tweetReplies.child(tweet.originalTweetId!).child(tweet.tweetId).child("likes").setValue(tweet.likes)
+        }
+        
+        if !tweet.isReply {
+            Globals.tweets.child(tweet.tweetId).child("likes").setValue(tweet.likes)
+        }
         
         if tweet.didLike {
             Globals.userLikes.child(uid).child(tweet.tweetId).removeValue { (err, ref) in

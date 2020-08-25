@@ -35,12 +35,19 @@ struct NotificationViewModel {
     init(_ notification: Notification) {
         self.notification = notification
         self.notificationType = notification.type
+        
+        componentsFormatter.allowedUnits = [.second, .minute, .hour, .day, .weekOfMonth, .month, .year]
+        componentsFormatter.maximumUnitCount = 1
+        componentsFormatter.unitsStyle = .full
+        componentsFormatter.collapsesLargestUnit = true
+        
+        dateFormatter.dateStyle = .long
     }
     
     var notificationText: NSAttributedString {
         let userText = NSAttributedString(string: notification.user.username, attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12.0)])
         let messageText = NSAttributedString(string: notificationMessage, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12.0)])
-        let timestampText = NSAttributedString(string: " • \(componentsFormatter.string(from: notification.timestamp, to: now)!)", attributes: [.font: UIFont.systemFont(ofSize: 12.0), .foregroundColor: UIColor.lightGray])
+        let timestampText = NSAttributedString(string: " • \(componentsFormatter.string(from: notification.timestamp, to: now)!) ago", attributes: [.font: UIFont.systemFont(ofSize: 12.0), .foregroundColor: UIColor.lightGray])
         let notificationText = NSMutableAttributedString()
         
         notificationText.append(userText)
