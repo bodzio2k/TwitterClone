@@ -209,17 +209,25 @@ struct TweetService {
     }
     
     func like(_ tweet: Tweet, completion: @escaping DatabaseCompletion) -> Void {
+        var ref: DatabaseReference?
+        
         guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
         
         if tweet.isReply && tweet.originalTweetId != nil {
-            Globals.tweetReplies.child(tweet.originalTweetId!).child(tweet.tweetId).child("likes").setValue(tweet.likes)
+            ref = Globals.tweetReplies.child(tweet.originalTweetId!).child(tweet.tweetId).child("likes")
         }
         
         if !tweet.isReply {
-            Globals.tweets.child(tweet.tweetId).child("likes").setValue(tweet.likes)
+            ref = Globals.tweets.child(tweet.tweetId).child("likes")
         }
+        
+        ref?.observeSingleEvent(of: .value, with: { (snapshot) in
+            if let likes = snapshot.value as? Int {
+                ref?.setValue(tweet.didLike ? likes - 1 : likes + 1)
+            }
+        })
         
         if tweet.didLike {
             Globals.userLikes.child(uid).child(tweet.tweetId).removeValue { (err, ref) in
