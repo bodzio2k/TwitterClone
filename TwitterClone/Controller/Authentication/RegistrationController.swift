@@ -10,7 +10,7 @@ import UIKit
 import Firebase
 
 class RegistrationController: UIViewController {
-    //MARK: -Properties
+    //MARK: Properties
     let imagePicker = UIImagePickerController()
     var profilePhoto: UIImage?
     
@@ -51,14 +51,32 @@ class RegistrationController: UIViewController {
         return b
     }()
     
-    //MARK: -Lifecycle
+    lazy var wrapperScrollView: UIScrollView = {
+        let sv = UIScrollView()
+        var statusBarHeight: CGFloat = 20.0
+        
+        if let height = UIApplication.shared.windows.first(where: {$0.isKeyWindow})?.windowScene?.statusBarManager?.statusBarFrame.height {
+            statusBarHeight = height
+        }
+        
+        sv.backgroundColor = .twitterBlue
+        sv.isScrollEnabled = true
+        sv.isUserInteractionEnabled = true
+        sv.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height - statusBarHeight)
+        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.showsVerticalScrollIndicator = false
+        
+        return sv
+    }()
+    
+    //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         configureUI()
     }
     
-    //MARK: -Selectors
+    //MARK: Selectors
     @objc func onLogin() {
         navigationController?.popViewController(animated: true)
     }
@@ -95,14 +113,18 @@ class RegistrationController: UIViewController {
         }
     }
     
-    //MARK: -Helpers
+    //MARK: Helpers
     func configureUI() {
-        view.backgroundColor = .twitterBlue
         navigationController?.navigationBar.isHidden = true
         navigationController?.navigationBar.barStyle = .black
         
-        view.addSubview(plusPhotoButton)
-        plusPhotoButton.centerX(inView: view, topAnchor: view.layoutMarginsGuide.topAnchor)
+        view.backgroundColor = .twitterBlue
+        view.addSubview(wrapperScrollView)
+        wrapperScrollView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
+        
+        
+        wrapperScrollView.addSubview(plusPhotoButton)
+        plusPhotoButton.centerX(inView: wrapperScrollView, topAnchor: wrapperScrollView.topAnchor)
         plusPhotoButton.setDimensions(width: 150.0, height: 150.0)
         
         let emailContainerView = Utilities.containerView(withImage: UIImage(systemName: "envelope"), for: emailTextField, placeholder: "Email")
@@ -117,14 +139,20 @@ class RegistrationController: UIViewController {
         stackView.spacing = 8.0
         stackView.distribution = .fillEqually
         
-        view.addSubview(stackView)
-        stackView.anchor(top: plusPhotoButton.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 8.0, paddingLeft: 8.0, paddingRight: 8.0)
+        wrapperScrollView.addSubview(stackView)
+        stackView.anchor(top: plusPhotoButton.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 8.0, paddingLeft: 8.0, paddingRight: 8.0)
+
         
-        view.addSubview(signupButton)
+        wrapperScrollView.addSubview(signupButton)
         signupButton.anchor(top: stackView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 24.0, paddingLeft: 8.0, paddingRight: 8.0)
         
-        view.addSubview(alreadyHaveAccountButton)
-        alreadyHaveAccountButton.anchor(left: view.safeAreaLayoutGuide.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.safeAreaLayoutGuide.rightAnchor, paddingLeft: 8.0, paddingRight: 8.0)
+        
+        wrapperScrollView.addSubview(alreadyHaveAccountButton)
+        
+        let screenHeight = UIScreen.main.bounds.height
+        let paddingTop = screenHeight - alreadyHaveAccountButton.frame.height - 52
+        
+        alreadyHaveAccountButton.anchor(top: wrapperScrollView.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: paddingTop, paddingLeft: 8.0, paddingRight: 8.0)
         
         imagePicker.delegate = self
         imagePicker.allowsEditing = true
@@ -132,7 +160,7 @@ class RegistrationController: UIViewController {
     
 }
 
-//MARK: -UIImagePickerControllerDelegate
+//MARK: UIImagePickerControllerDelegate
 extension RegistrationController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         guard let image = info[.editedImage] as? UIImage else {
