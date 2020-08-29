@@ -127,7 +127,7 @@ class LoginController: UIViewController {
     }
     
     @objc func onKeyboardDidHide(notification: NSNotification) -> Void {
-        return
+        self.view.window?.frame.origin.y = .zero
     }
     
     //MARK: Lifecycle
