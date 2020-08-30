@@ -14,6 +14,8 @@ class RegistrationController: UIViewController {
     let imagePicker = UIImagePickerController()
     var profilePhoto: UIImage?
     var contentSize: CGSize!
+    var textFieldOrder = Array<UITextField>()
+    var nextTextField: Int?
     
     let plusPhotoButton: UIButton = {
         let b = UIButton()
@@ -26,10 +28,45 @@ class RegistrationController: UIViewController {
         return b
     }()
     
-    let emailTextField = UITextField()
-    let passwordTextField = UITextField()
-    let fullnameTextField = UITextField()
-    let usernameTextField = UITextField()
+    let emailTextField: UITextField = {
+        let tf = UITextField()
+        
+        tf.returnKeyType = .next
+        tf.keyboardType = .emailAddress
+        tf.textContentType = .oneTimeCode
+        
+        return tf
+    }()
+    
+    let passwordTextField: UITextField = {
+        let tf = UITextField()
+        
+        tf.returnKeyType = .next
+        tf.keyboardType = .default
+        tf.textContentType = .oneTimeCode
+        
+        return tf
+    }()
+    
+    let fullnameTextField: UITextField = {
+        let tf = UITextField()
+        
+        tf.returnKeyType = .next
+        tf.keyboardType = .asciiCapable
+        tf.textContentType = .oneTimeCode
+        
+        return tf
+    }()
+    
+    let usernameTextField: UITextField = {
+        let tf = UITextField()
+        
+        tf.returnKeyType = .go
+        tf.keyboardType = .asciiCapable
+        tf.textContentType = .oneTimeCode
+        
+        return tf
+    }()
     
     let signupButton: UIButton = {
         let b = UIButton(type: .system)
@@ -79,7 +116,26 @@ class RegistrationController: UIViewController {
         
         configureUI()
         
-        return
+        emailTextField.delegate = self
+        passwordTextField.delegate = self
+        fullnameTextField.delegate = self
+        usernameTextField.delegate = self
+        
+        textFieldOrder = [emailTextField, passwordTextField, fullnameTextField, usernameTextField]
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        NotificationCenter.default.addObserver(self, selector: #selector(onKeyboardDidShow(notification:)), name: UIResponder.keyboardDidShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(onKeyboardDidHide(notification:)), name: UIResponder.keyboardDidHideNotification, object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidShowNotification, object: nil)
+        NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardDidHideNotification, object: nil)
     }
     
     //MARK: Selectors
@@ -114,6 +170,23 @@ class RegistrationController: UIViewController {
             self.dismiss(animated: true, completion: nil)
         }
     }
+    
+    @objc func onKeyboardDidShow(notification: NSNotification) -> Void {
+        guard let userInfo = notification.userInfo else {
+            return
+        }
+        
+        guard let keyboardSize = (userInfo[UIResponder.keyboardFrameBeginUserInfoKey] as? NSValue)?.cgRectValue.size else {
+            return
+        }
+        
+        scrollView.contentSize = CGSize(width: view.frame.size.width, height: view.frame.size.height + keyboardSize.height)
+    }
+    
+    @objc func onKeyboardDidHide(notification: NSNotification) -> Void {
+        scrollView.contentSize = contentSize
+    }
+    
     
     //MARK: Helpers
     func configureUI() {
@@ -175,5 +248,29 @@ extension RegistrationController: UIImagePickerControllerDelegate, UINavigationC
         plusPhotoButton.layer.borderWidth = 3.0
         
         dismiss(animated: true, completion: nil)
+    }
+}
+
+extension RegistrationController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == emailTextField {
+            passwordTextField.becomeFirstResponder()
+        }
+        
+        if textField == passwordTextField {
+            fullnameTextField.becomeFirstResponder()
+        }
+        
+        if textField == fullnameTextField {
+            usernameTextField.becomeFirstResponder()
+        }
+        
+        if textField == usernameTextField {
+            DispatchQueue.main.async {
+                self.onSignup()
+            }
+        }
+        
+        return true
     }
 }
