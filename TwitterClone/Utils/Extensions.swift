@@ -94,3 +94,12 @@ extension UIColor {
     
     static let twitterBlue = UIColor.rgb(red: 29, green: 161, blue: 242)
 }
+
+
+extension UIViewController {
+    func getKeyWindow() -> UIWindow {
+        let window = UIApplication.shared.windows.first(where: { $0.isKeyWindow })
+        
+        return window!
+    }
+}
