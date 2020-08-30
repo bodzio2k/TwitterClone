@@ -13,6 +13,7 @@ class RegistrationController: UIViewController {
     //MARK: Properties
     let imagePicker = UIImagePickerController()
     var profilePhoto: UIImage?
+    var contentSize: CGSize!
     
     let plusPhotoButton: UIButton = {
         let b = UIButton()
@@ -51,29 +52,34 @@ class RegistrationController: UIViewController {
         return b
     }()
     
-    lazy var wrapperScrollView: UIScrollView = {
+    lazy var scrollView: UIScrollView = {
         let sv = UIScrollView()
-        var statusBarHeight: CGFloat = 20.0
-        
-        if let height = UIApplication.shared.windows.first(where: {$0.isKeyWindow})?.windowScene?.statusBarManager?.statusBarFrame.height {
-            statusBarHeight = height
-        }
         
         sv.backgroundColor = .twitterBlue
         sv.isScrollEnabled = true
         sv.isUserInteractionEnabled = true
-        sv.contentSize = CGSize(width: self.view.frame.width, height: self.view.frame.height - statusBarHeight)
-        sv.translatesAutoresizingMaskIntoConstraints = false
+        sv.frame.size = self.contentSize
+        sv.contentSize = self.contentSize
         sv.showsVerticalScrollIndicator = false
         
         return sv
+    }()
+    
+    lazy var wrapperView: UIView = {
+        let v = UIView()
+                
+        return v
     }()
     
     //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        contentSize = view.safeAreaLayoutGuide.layoutFrame.size
+        
         configureUI()
+        
+        return
     }
     
     //MARK: Selectors
@@ -99,11 +105,7 @@ class RegistrationController: UIViewController {
                 return
             }
             
-            guard let keyWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) else {
-                return
-            }
-            
-            guard let mainController = keyWindow.rootViewController as? MainTabController else {
+            guard let mainController = self.getKeyWindow().rootViewController as? MainTabController else {
                 return
             }
             
@@ -119,41 +121,38 @@ class RegistrationController: UIViewController {
         navigationController?.navigationBar.barStyle = .black
         
         view.backgroundColor = .twitterBlue
-        view.addSubview(wrapperScrollView)
-        wrapperScrollView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor)
         
+        view.addSubview(scrollView)
+        scrollView.anchor(top: view.safeAreaLayoutGuide.topAnchor, left: view.safeAreaLayoutGuide.leftAnchor, bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.safeAreaLayoutGuide.rightAnchor)
         
-        wrapperScrollView.addSubview(plusPhotoButton)
-        plusPhotoButton.centerX(inView: wrapperScrollView, topAnchor: wrapperScrollView.topAnchor)
+        scrollView.addSubview(wrapperView)
+        wrapperView.anchor(top: scrollView.topAnchor, left: scrollView.leftAnchor, paddingTop: 0.0, paddingLeft: 0.0, paddingBottom: 0.0, paddingRight: 0.0, width: scrollView.frame.width, height: scrollView.frame.height)
+        
+        wrapperView.addSubview(plusPhotoButton)
+        plusPhotoButton.centerX(inView: scrollView, topAnchor: scrollView.topAnchor)
         plusPhotoButton.setDimensions(width: 150.0, height: 150.0)
         
         let emailContainerView = Utilities.containerView(withImage: UIImage(systemName: "envelope"), for: emailTextField, placeholder: "Email")
         let passwpordContainerView = Utilities.containerView(withImage: UIImage(systemName: "lock"), for: passwordTextField, placeholder: "Password")
         passwordTextField.isSecureTextEntry = true
-        
+
         let fullnameContainerView = Utilities.containerView(withImage: UIImage(systemName: "person"), for: fullnameTextField, placeholder: "Full Name")
         let usernameContainerView = Utilities.containerView(withImage: UIImage(systemName: "at"), for: usernameTextField, placeholder: "Username")
-        
+
         let stackView = UIStackView(arrangedSubviews: [emailContainerView, passwpordContainerView, fullnameContainerView, usernameContainerView])
         stackView.axis = .vertical
         stackView.spacing = 8.0
         stackView.distribution = .fillEqually
-        
-        wrapperScrollView.addSubview(stackView)
-        stackView.anchor(top: plusPhotoButton.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 8.0, paddingLeft: 8.0, paddingRight: 8.0)
 
-        
-        wrapperScrollView.addSubview(signupButton)
+        wrapperView.addSubview(stackView)
+        stackView.anchor(top: plusPhotoButton.bottomAnchor, left: view.safeAreaLayoutGuide.leftAnchor, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 8.0, paddingLeft: 8.0, paddingRight: 8.0)
+
+        wrapperView.addSubview(signupButton)
         signupButton.anchor(top: stackView.bottomAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: 24.0, paddingLeft: 8.0, paddingRight: 8.0)
-        
-        
-        wrapperScrollView.addSubview(alreadyHaveAccountButton)
-        
-        let screenHeight = UIScreen.main.bounds.height
-        let paddingTop = screenHeight - alreadyHaveAccountButton.frame.height - 52
-        
-        alreadyHaveAccountButton.anchor(top: wrapperScrollView.topAnchor, left: view.leftAnchor, right: view.rightAnchor, paddingTop: paddingTop, paddingLeft: 8.0, paddingRight: 8.0)
-        
+
+        wrapperView.addSubview(alreadyHaveAccountButton)
+        alreadyHaveAccountButton.anchor(top: nil, left: view.safeAreaLayoutGuide.leftAnchor, bottom: wrapperView.bottomAnchor, right: view.safeAreaLayoutGuide.rightAnchor, paddingTop: 0.0, paddingLeft: 0.0, paddingBottom: 20.0, paddingRight: 0.0, width: nil, height: nil)
+
         imagePicker.delegate = self
         imagePicker.allowsEditing = true
     }
