@@ -14,7 +14,7 @@ struct AuthUser {
     let username: String
     let fullname: String
     let password: String
-    let profilePhoto: UIImage
+    let profilePhoto: UIImage?
 }
 
 struct AuthService {
@@ -35,41 +35,55 @@ struct AuthService {
             }
             
             guard let uid = result?.user.uid else {
+                completion(error)
+                
                 return
             }
             
-            let filename = UUID().uuidString + ".jpeg"
-            
-            if let data = newUser.profilePhoto.jpegData(compressionQuality: 0.3) {
-                Globals.profileImages.child(filename).putData(data, metadata: nil) { (meta, error) in
-                    if let error = error {
-                        completion(error)
-                        
-                        return
-                    }
+            let values = ["username": newUser.username.lowercased(), "fullname": newUser.fullname]
+                                   
+            Globals.users.child(uid).updateChildValues(values) { (error, ref) in
+                if let error = error {
+                    completion(error)
+                   
+                    return
+                }
+                
+                if let data = newUser.profilePhoto?.jpegData(compressionQuality: 0.3) {
+                    let filename = UUID().uuidString + ".jpeg"
                     
-                    Globals.profileImages.child(filename).downloadURL { (url, error) in
+                    Globals.profileImages.child(filename).putData(data, metadata: nil) { (meta, error) in
                         if let error = error {
                             completion(error)
                             
                             return
                         }
                         
-                        profilePhotoURL = url?.absoluteString ?? ""
-                        
-                        let values = ["username": newUser.username.lowercased(), "fullname": newUser.fullname, "profilePhotoURL": profilePhotoURL]
-                        
-                        Globals.users.child(uid).updateChildValues(values) { (error, ref) in
+                        Globals.profileImages.child(filename).downloadURL { (url, error) in
                             if let error = error {
                                 completion(error)
                                 
                                 return
                             }
+                            
+                            profilePhotoURL = url?.absoluteString ?? ""
+                            
+                            let values = ["profilePhotoURL": profilePhotoURL]
+                            
+                            Globals.users.child(uid).updateChildValues(values) { (error, ref) in
+                                if let error = error {
+                                    completion(error)
+                                    
+                                    return
+                                }
+                            }
+                            
+                            completion(nil)
                         }
-                        
-                        completion(nil)
                     }
                 }
+                
+                completion(nil)
             }
         }
     }
