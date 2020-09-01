@@ -14,8 +14,7 @@ class RegistrationController: UIViewController {
     let imagePicker = UIImagePickerController()
     var profilePhoto: UIImage?
     var contentSize: CGSize!
-    var textFieldOrder = Array<UITextField>()
-    var nextTextField: Int?
+    var keyboardHeight: CGFloat = 0.0
     
     let plusPhotoButton: UIButton = {
         let b = UIButton()
@@ -121,7 +120,7 @@ class RegistrationController: UIViewController {
         fullnameTextField.delegate = self
         usernameTextField.delegate = self
         
-        textFieldOrder = [emailTextField, passwordTextField, fullnameTextField, usernameTextField]
+        emailTextField.becomeFirstResponder()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -148,11 +147,11 @@ class RegistrationController: UIViewController {
     }
     
     @objc func onSignup() {
-        guard let email = emailTextField.text, let password = passwordTextField.text, let username = usernameTextField.text, let fullname = fullnameTextField.text, let profilePhoto = self.profilePhoto else {
+        guard let email = emailTextField.text, let password = passwordTextField.text, let username = usernameTextField.text, let fullname = fullnameTextField.text else {
             return
         }
         
-        let newUser = AuthUser(email: email, username: username, fullname: fullname, password: password, profilePhoto: profilePhoto)
+        let newUser = AuthUser(email: email, username: username, fullname: fullname, password: password, profilePhoto: self.profilePhoto)
         
         AuthService.shared.createUser(newUser) { (error) in
             if let error = error {
@@ -180,11 +179,15 @@ class RegistrationController: UIViewController {
             return
         }
         
+        keyboardHeight = keyboardSize.height
+        
         scrollView.contentSize = CGSize(width: view.frame.size.width, height: view.frame.size.height + keyboardSize.height)
     }
     
     @objc func onKeyboardDidHide(notification: NSNotification) -> Void {
+        keyboardHeight = 0.0
         scrollView.contentSize = contentSize
+        scrollView.scrollRectToVisible(plusPhotoButton.frame, animated: true)
     }
     
     
@@ -230,6 +233,14 @@ class RegistrationController: UIViewController {
         imagePicker.allowsEditing = true
     }
     
+    private func isObscuredByKeyboard(_ tf: UITextField) -> CGFloat {
+        let vortex = CGPoint(x: tf.frame.minX, y: tf.frame.maxY)
+        let globalPoint = tf.convert(vortex, to: view)
+        let visibleAreaHeight = view.frame.height - keyboardHeight
+        let obscuredHeight = visibleAreaHeight - globalPoint.y
+        
+        return obscuredHeight < 0.0 ? obscuredHeight * -1.0 : 0.0
+    }
 }
 
 //MARK: UIImagePickerControllerDelegate
@@ -253,20 +264,37 @@ extension RegistrationController: UIImagePickerControllerDelegate, UINavigationC
 
 extension RegistrationController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        var nextField: UITextField?
+        
         if textField == emailTextField {
-            passwordTextField.becomeFirstResponder()
+            nextField = passwordTextField
         }
         
         if textField == passwordTextField {
-            fullnameTextField.becomeFirstResponder()
+            nextField = fullnameTextField
         }
         
         if textField == fullnameTextField {
-            usernameTextField.becomeFirstResponder()
+            nextField = usernameTextField
         }
         
         if textField == usernameTextField {
-            DispatchQueue.main.async {
+            nextField = nil
+        }
+        
+        if let nextField = nextField {
+            nextField.becomeFirstResponder()
+            let obscuredArea = isObscuredByKeyboard(nextField)
+            let padding: CGFloat = 8.0
+            
+            if obscuredArea > 0.0 {
+                scrollView.setContentOffset(CGPoint(x: 0.0, y: obscuredArea + padding), animated: true)
+            }
+        }
+        else {
+            signupButton.becomeFirstResponder()
+            scrollView.setContentOffset(CGPoint(x: 0.0, y: keyboardHeight), animated: true)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                 self.onSignup()
             }
         }
@@ -274,3 +302,5 @@ extension RegistrationController: UITextFieldDelegate {
         return true
     }
 }
+
+
