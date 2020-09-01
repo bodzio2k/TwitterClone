@@ -31,7 +31,7 @@ class ProfileHeaderView: UICollectionReusableView {
             followingLabel.attributedText = viewModel.following
             followersLabel.attributedText = viewModel.followers
             
-            profileImageView.sd_setImage(with: user.profilePhotoURL, completed: nil)
+            profileImageView.sd_setImage(with: user.profilePhotoURL, placeholderImage: Globals.placeholderCropCircleFill)
             
             profileNameLabel.text = user.fullname
             usernameLabel.text = "@\(user.username)"
@@ -55,11 +55,13 @@ class ProfileHeaderView: UICollectionReusableView {
     let profileImageView: UIImageView = {
         let iv = UIImageView()
         
-        iv.backgroundColor = .lightGray
+        iv.backgroundColor = .white
         iv.clipsToBounds = true
         iv.contentMode = .scaleAspectFill
         iv.layer.borderColor = UIColor.white.cgColor
         iv.layer.borderWidth = 4.0
+        iv.tintColor = .lightGray
+        iv.image = Globals.placeholderCropCircleFill
         
         return iv
     }()

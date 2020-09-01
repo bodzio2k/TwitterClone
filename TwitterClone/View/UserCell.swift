@@ -18,8 +18,7 @@ class UserCell: UITableViewCell {
         iv.layer.cornerRadius = profilePhotoSize / 2.0
         iv.layer.masksToBounds = true
         iv.setDimensions(width: profilePhotoSize, height: profilePhotoSize)
-        iv.backgroundColor = .twitterBlue
-        
+        iv.tintColor = .lightGray
         
         return iv
     }()
@@ -63,7 +62,7 @@ class UserCell: UITableViewCell {
     
     //MARK: Helpers
     func configure(for user: User) -> Void {
-        profiePhotoImageView.sd_setImage(with: user.profilePhotoURL)
+        profiePhotoImageView.sd_setImage(with: user.profilePhotoURL, placeholderImage: Globals.placeholderCircle)
         usernameLabel.text = "@\(user.username)"
         fullnameLabel.text = user.fullname
     }

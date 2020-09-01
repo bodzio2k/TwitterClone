@@ -19,17 +19,18 @@ class EditProfileHeaderView: UIView {
     lazy var profileImageView: UIImageView = {
         let iv = UIImageView()
         
-        iv.backgroundColor = .lightGray
+        iv.backgroundColor = .white
         iv.clipsToBounds = true
         iv.contentMode = .scaleAspectFill
         iv.layer.borderColor = UIColor.white.cgColor
         iv.layer.borderWidth = 4.0
+        iv.tintColor = .lightGray
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(changeProfilePhoto))
         iv.addGestureRecognizer(tap)
         iv.isUserInteractionEnabled = true
         
-        iv.sd_setImage(with: user.profilePhotoURL, completed: nil)
+        iv.sd_setImage(with: user.profilePhotoURL, placeholderImage: Globals.placeholderCropCircleFill)
         
         return iv
     }()

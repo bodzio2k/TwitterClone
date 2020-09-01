@@ -30,7 +30,8 @@ class TweetViewCell: UICollectionViewCell {
         iv.layer.cornerRadius = profilePhotoSize / 2.0
         iv.layer.masksToBounds = true
         iv.setDimensions(width: profilePhotoSize, height: profilePhotoSize)
-        iv.backgroundColor = .twitterBlue
+        iv.backgroundColor = .white
+        iv.tintColor = .lightGray
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(profilePhotoImageViewTapped))
         iv.addGestureRecognizer(tap)
@@ -157,7 +158,7 @@ class TweetViewCell: UICollectionViewCell {
         
         let viewModel = TweetViewModel(tweet: tweet)
         
-        profiePhotoImageView.sd_setImage(with: viewModel.profilePhotoURL)
+        profiePhotoImageView.sd_setImage(with: viewModel.profilePhotoURL, placeholderImage: Globals.placeholderCircle)
         headerLineLabel.attributedText = viewModel.headerLine
         tweetCaptionLabel.text = tweet.caption
         buttons[2].tintColor = viewModel.likeButtonTintColor

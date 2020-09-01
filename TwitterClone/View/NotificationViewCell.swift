@@ -24,7 +24,7 @@ class NotificationViewCell: UITableViewCell {
         iv.layer.cornerRadius = profilePhotoSize / 2.0
         iv.layer.masksToBounds = true
         iv.setDimensions(width: profilePhotoSize, height: profilePhotoSize)
-        iv.backgroundColor = .twitterBlue
+        iv.tintColor = .lightGray
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(profilePhotoImageTapped))
         iv.addGestureRecognizer(tap)
@@ -86,7 +86,7 @@ class NotificationViewCell: UITableViewCell {
         let viewModel = NotificationViewModel(notifiation)
         
         label.attributedText = viewModel.notificationText
-        profiePhotoImageView.sd_setImage(with: viewModel.profilePhotoUrl, completed: nil)
+        profiePhotoImageView.sd_setImage(with: viewModel.profilePhotoUrl, placeholderImage: Globals.placeholderCircle)
         followButton.isHidden = viewModel.shouldHideFollowButton
         followButton.setTitle(viewModel.followButtonText, for: .normal)
     }

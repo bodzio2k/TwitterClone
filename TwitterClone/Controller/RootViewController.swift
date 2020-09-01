@@ -17,27 +17,29 @@ import Firebase
 class RootViewController: UIViewController {
     var navigationItemView: UIView?
     var navigationItemTitle: String?
-    var profiePhotoImageView: UIImageView = UIImageView()
-    let profilePhotoSize: CGFloat = 32.0
+    lazy var profiePhotoImageView: UIImageView = {
+        let iv = UIImageView()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(leftBarButtonItemTapped))
+        let profilePhotoSize: CGFloat = 32.0
+        
+        iv.contentMode = .scaleAspectFit
+        iv.layer.cornerRadius = profilePhotoSize / 2.0
+        iv.layer.masksToBounds = true
+        iv.setDimensions(width: profilePhotoSize, height: profilePhotoSize)
+        iv.addGestureRecognizer(tap)
+        iv.tintColor = .lightGray
+        
+        return iv
+    }()
+    
     weak var logoutDelegate: LogoutDelegate?
     var currentUser: User? {
         didSet {
-            print("User did set.")
-            
-            guard let newValue = currentUser, let profilePhotoURL = newValue.profilePhotoURL else {
+            guard let newValue = currentUser else {
                 return
             }
             
-            let placeholderImage = UIImage(systemName: "person.crop.circle")
-            let tap = UITapGestureRecognizer(target: self, action: #selector(leftBarButtonItemTapped))
-            
-            profiePhotoImageView.sd_setImage(with: profilePhotoURL, placeholderImage: placeholderImage)
-            profiePhotoImageView.contentMode = .scaleAspectFit
-            profiePhotoImageView.layer.cornerRadius = profilePhotoSize / 2.0
-            profiePhotoImageView.layer.masksToBounds = true
-            profiePhotoImageView.setDimensions(width: profilePhotoSize, height: profilePhotoSize)
-            profiePhotoImageView.addGestureRecognizer(tap)
-            
+            profiePhotoImageView.sd_setImage(with: newValue.profilePhotoURL, placeholderImage: Globals.placeholderCircle)
             navigationItem.leftBarButtonItem = UIBarButtonItem(customView: profiePhotoImageView)
         }
     }

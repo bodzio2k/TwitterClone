@@ -33,16 +33,14 @@ class NewTweetController: RootViewController {
     lazy var profileImageView: UIImageView = {
         let iv = UIImageView()
         
-        iv.backgroundColor = .red
+        iv.backgroundColor = .white
         iv.clipsToBounds = true
         iv.contentMode = .scaleAspectFill
-         
+        iv.tintColor = .lightGray
         iv.setDimensions(width: 44.0, height: 44.0)
         iv.layer.cornerRadius = 44.0 / 2.0
             
-        if let profileImageURL = currentUser?.profilePhotoURL {
-            iv.sd_setImage(with: profileImageURL, completed: nil)
-        }
+        iv.sd_setImage(with: currentUser?.profilePhotoURL, placeholderImage: Globals.placeholderCircle)
         
         return iv
     }()

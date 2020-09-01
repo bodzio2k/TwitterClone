@@ -26,4 +26,10 @@ struct Globals {
     
     static let storageReference = Storage.storage().reference()
     static let profileImages = storageReference.child("profile_images")
+    
+    static let placeholderCircle = UIImage(systemName: "person.circle")!
+    static let placeholderCropCircleFill = UIImage(systemName: "person.crop.circle.fill")!
+    static let placeholderCropCircle = UIImage(systemName: "person.crop.circle")!
+    
+    
 }
