@@ -190,6 +190,8 @@ extension ProfileController: ProfileHeaderViewDelegate {
             controller.delegate = self
             nav.modalPresentationStyle = .fullScreen
             present(nav, animated: true)
+            
+            return
         }
         
         if user.isFollowed {
