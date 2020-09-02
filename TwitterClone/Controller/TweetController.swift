@@ -173,6 +173,9 @@ extension TweetController: TweetHeaderViewDelegate {
     }
     
     func replyButtonTapped() {
+        tweet.replyingTo = tweet.author.username
+        tweet.originalTweetId = tweet.tweetId
+        
         let newTweetController = NewTweetController(user: tweet.author, config: .reply(tweet))
         let nav = UINavigationController(rootViewController: newTweetController)
         present(nav, animated: true, completion: nil)
@@ -234,6 +237,9 @@ extension TweetController: TweetCellDelegate {
         guard let tweet = cell.tweet else {
             return
         }
+        
+        tweet.replyingTo = tweet.author.username
+        tweet.originalTweetId = self.tweet.tweetId
         
         let newTweetController = NewTweetController(user: tweet.author, config: .reply(tweet))
         let nav = UINavigationController(rootViewController: newTweetController)

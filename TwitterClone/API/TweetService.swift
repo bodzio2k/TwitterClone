@@ -40,7 +40,7 @@ struct TweetService {
             values["replyingTo"] = replyingTo
             values["originalTweetId"] = originalTweetId
             
-            let tweetReplyRef = Globals.tweetReplies.child(tweet.tweetId).childByAutoId()
+            let tweetReplyRef = Globals.tweetReplies.child(originalTweetId).childByAutoId()
             
             tweetReplyRef.updateChildValues(values) { (err, ref) in
                 guard let replyId = ref.key else {
