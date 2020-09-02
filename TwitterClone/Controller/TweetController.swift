@@ -38,7 +38,7 @@ class TweetController: RootViewController {
     //MARK: API Calls
     func fetchReplies() -> Void {
         TweetService.shared.fetchReplies(for: tweet) { (replies) in
-            self.replies = replies
+            self.replies = replies.sorted { $0.timestamp < $1.timestamp }
             
             self.repliesCollectionView.reloadData()
             self.checkUserLikes(completion: nil)
