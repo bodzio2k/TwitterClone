@@ -31,5 +31,13 @@ struct Globals {
     static let placeholderCropCircleFill = UIImage(systemName: "person.crop.circle.fill")!
     static let placeholderCropCircle = UIImage(systemName: "person.crop.circle")!
     
-    
+    static var deviceWidth: CGFloat {
+        var width: CGFloat = 0.0
+        
+        if let keyWindow = UIApplication.shared.windows.first(where: { $0.isKeyWindow }) {
+            width = keyWindow.screen.bounds.width
+        }
+        
+        return width
+    }
 }

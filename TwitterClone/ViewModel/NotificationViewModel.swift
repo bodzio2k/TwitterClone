@@ -31,6 +31,7 @@ struct NotificationViewModel {
     var profilePhotoUrl: URL? {
         return notification.user.profilePhotoURL
     }
+    let lineBreakTreshold: CGFloat = 414.0
     
     init(_ notification: Notification) {
         self.notification = notification
@@ -47,7 +48,8 @@ struct NotificationViewModel {
     var notificationText: NSAttributedString {
         let userText = NSAttributedString(string: notification.user.username, attributes: [NSAttributedString.Key.font: UIFont.boldSystemFont(ofSize: 12.0)])
         let messageText = NSAttributedString(string: notificationMessage, attributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 12.0)])
-        let timestampText = NSAttributedString(string: " • \(componentsFormatter.string(from: notification.timestamp, to: now)!) ago", attributes: [.font: UIFont.systemFont(ofSize: 12.0), .foregroundColor: UIColor.lightGray])
+        let divider = Globals.deviceWidth < lineBreakTreshold ? "\n" : " • "
+        let timestampText = NSAttributedString(string: "\(divider)\(componentsFormatter.string(from: notification.timestamp, to: now)!) ago", attributes: [.font: UIFont.systemFont(ofSize: 12.0), .foregroundColor: UIColor.lightGray])
         let notificationText = NSMutableAttributedString()
         
         notificationText.append(userText)
@@ -63,5 +65,9 @@ struct NotificationViewModel {
     
     var followButtonText: String {
         return notification.user.isFollowed ? "Following" : "Follow"
+    }
+    
+    var notificationTextNumberOfLines: Int {
+        return Globals.deviceWidth < lineBreakTreshold ? 0 : 1
     }
 }

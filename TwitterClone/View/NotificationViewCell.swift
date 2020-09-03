@@ -65,15 +65,16 @@ class NotificationViewCell: UITableViewCell {
         profiePhotoImageView.centerY(inView: self)
         profiePhotoImageView.anchor(left: safeAreaLayoutGuide.leftAnchor, paddingLeft: 8.0)
         
-        addSubview(label)
-        label.centerY(inView: self)
-        label.anchor(left: profiePhotoImageView.rightAnchor, paddingLeft: 8.0)
-        
         addSubview(followButton)
         followButton.centerY(inView: self)
         followButton.anchor(right: safeAreaLayoutGuide.rightAnchor, paddingRight: 8.0)
         followButton.setDimensions(width: 88.0, height: 32.0)
         followButton.layer.cornerRadius = 16.0
+        
+        addSubview(label)
+        label.centerY(inView: self)
+        label.anchor(left: profiePhotoImageView.rightAnchor, right: followButton.leftAnchor, paddingLeft: 8.0, paddingRight: 2.0)
+        
     }
     
     required init?(coder: NSCoder) {
@@ -86,6 +87,7 @@ class NotificationViewCell: UITableViewCell {
         let viewModel = NotificationViewModel(notifiation)
         
         label.attributedText = viewModel.notificationText
+        label.numberOfLines = viewModel.notificationTextNumberOfLines
         profiePhotoImageView.sd_setImage(with: viewModel.profilePhotoUrl, placeholderImage: Globals.placeholderCircle)
         followButton.isHidden = viewModel.shouldHideFollowButton
         followButton.setTitle(viewModel.followButtonText, for: .normal)
