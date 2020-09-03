@@ -56,52 +56,45 @@ struct TweetService {
     func fetchTweets(completion: @escaping ([Tweet]?, Error?) -> Void) -> Void {
         var tweets = Array<Tweet>()
         
-        guard let currentUserId = Auth.auth().currentUser?.uid else {
+        guard let uid = Auth.auth().currentUser?.uid else {
             return
         }
         
-        Globals.userFollowing.child(currentUserId).observe(.childAdded) { snapshot in
-            let followingUserId = snapshot.key
-            
-            Globals.userTweets.child(followingUserId).observe(.childAdded) { snapshot in
-                let tweetId = snapshot.key
-                
-                self.fetchTweet(with: tweetId) { tweet in
-                    tweets.append(tweet)
-                    completion(tweets, nil)
+        Globals.userFollowing.child(uid).observeSingleEvent(of: .value) { (snapshot) in
+            if !snapshot.exists() {
+                completion(tweets, nil)
+            }
+            else {
+                Globals.userFollowing.child(uid).observe(.childAdded) { snapshot in
+                    let followingUserId = snapshot.key
+                    
+                    Globals.userTweets.child(followingUserId).observe(.childAdded) { snapshot in
+                        let tweetId = snapshot.key
+                        
+                        self.fetchTweet(with: tweetId) { tweet in
+                            tweets.append(tweet)
+                            completion(tweets, nil)
+                        }
+                    }
                 }
             }
         }
         
-        Globals.userTweets.child(currentUserId).observe(.childAdded) { snapshot in
-            let tweetId = snapshot.key
-
-            self.fetchTweet(with: tweetId) { tweet in
-                tweets.append(tweet)
+        Globals.userTweets.child(uid).observeSingleEvent(of: .value) { (snapshot) in
+            if !snapshot.exists() {
                 completion(tweets, nil)
             }
+            else {
+                Globals.userTweets.child(uid).observe(.childAdded) { snapshot in
+                    let tweetId = snapshot.key
+
+                    self.fetchTweet(with: tweetId) { tweet in
+                        tweets.append(tweet)
+                        completion(tweets, nil)
+                    }
+                }
+            }
         }
-//        var author: User?
-//
-//        Globals.tweets.observe(.childAdded) { (snapshot) in
-//            guard let tweetDictionary = snapshot.value as? TweetDictionary else {
-//                return
-//            }
-//
-//            guard let authorId = tweetDictionary["authorId"] as? String else {
-//                return
-//            }
-//
-//            UserService.shared.fetchUser(identifiedBy: authorId) { user in
-//                author = user
-//
-//                let tweetId = snapshot.key
-//                let tweet = Tweet(createdBy: author!, tweetId: tweetId, dictionary: tweetDictionary)
-//                tweets.append(tweet)
-//
-//                completion(tweets, nil)
-//            }
-//        }
     }
     
     func fetchTweet(with tweetId: String, completion: @escaping (Tweet) -> Void) {
