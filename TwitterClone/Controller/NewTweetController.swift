@@ -72,6 +72,8 @@ class NewTweetController: RootViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(customView: newTweetButton)
         
         super.viewDidLoad()
+        
+        captionTexView.becomeFirstResponder()
     }
     
     //MARK: Selectors

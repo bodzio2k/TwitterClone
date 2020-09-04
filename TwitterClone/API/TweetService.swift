@@ -47,7 +47,9 @@ struct TweetService {
                     return
                 }
                 
-                Globals.userReplies.child(authorId).updateChildValues([tweet.tweetId : replyId], withCompletionBlock: completion)
+                let userReplyRef = Globals.userReplies.child(authorId).child(originalTweetId)
+                
+                userReplyRef.updateChildValues([replyId : 1], withCompletionBlock: completion)
             }
         }
 
@@ -173,32 +175,61 @@ struct TweetService {
     }
     
     func fetchReplies(madeBy user: User, completion: @escaping ([Tweet]) -> Void) -> Void {
-        var replies = Array<Tweet>()
+        var repliesDic: Dictionary<String, Array<String>> = [:]
+        let uid = user.uid
+        var tweetsAsReply: Array<Tweet> = []
         
-        Globals.userReplies.child(user.uid).observe(.childAdded) { (snapshot) in
+        Globals.userReplies.child(uid).observe(.childAdded) { (snapshot) in
             let tweetId = snapshot.key
             
-            guard let replyId = snapshot.value as? String else {
-                return
+            if let replies = snapshot.value as? [String: Int] {
+                repliesDic[tweetId] = Array(replies.keys)
             }
             
-            Globals.tweetReplies.child(tweetId).child(replyId).observeSingleEvent(of: .value) { (snapshot) in
-                guard let tweetDictionary = snapshot.value as? TweetDictionary else {
-                    return
-                }
-                
-                guard let authorId = tweetDictionary["authorId"] as? String else {
-                    return
-                }
-                
-                UserService.shared.fetchUser(identifiedBy: authorId) { user in
-                    let tweet = Tweet(createdBy: user, tweetId: replyId, dictionary: tweetDictionary)
+            for (k, v) in repliesDic {
+                Globals.tweetReplies.child(k).observeSingleEvent(of: .value) { (snapshot) in
+                    guard let replies = snapshot.value as? [String: TweetDictionary] else {
+                        return
+                    }
                     
-                    replies.append(tweet)
-                    completion(replies)
+                    let userReplies = replies.filter { v.contains($0.key) }
+                    
+                    userReplies.forEach { (k, v) in
+                        let tweet = Tweet(createdBy: user, tweetId: k, dictionary: v)
+                        
+                        tweetsAsReply.append(tweet)
+                        
+                        completion(tweetsAsReply.sorted { $0.timestamp < $1.timestamp})
+                    }
                 }
             }
+            
+            completion([])
         }
+//        Globals.userReplies.child(user.uid).observe(.childAdded) { (snapshot) in
+//            let tweetId = snapshot.key
+//
+//            guard let replyId = snapshot.value as? String else {
+//                return
+//            }
+//
+//            Globals.tweetReplies.child(tweetId).child(replyId).observeSingleEvent(of: .value) { (snapshot) in
+//                guard let tweetDictionary = snapshot.value as? TweetDictionary else {
+//                    return
+//                }
+//
+//                guard let authorId = tweetDictionary["authorId"] as? String else {
+//                    return
+//                }
+//
+//                UserService.shared.fetchUser(identifiedBy: authorId) { user in
+//                    let tweet = Tweet(createdBy: user, tweetId: replyId, dictionary: tweetDictionary)
+//
+//                    replies.append(tweet)
+//                    completion(replies)
+//                }
+//            }
+//        }
     }
     
     func like(_ tweet: Tweet, completion: @escaping DatabaseCompletion) -> Void {
