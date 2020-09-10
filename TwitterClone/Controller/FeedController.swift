@@ -149,14 +149,16 @@ extension FeedController: TweetCellDelegate {
     }
     
     func likeButtonTapped(at cell: TweetViewCell) {
-        guard let tweet = cell.tweet else {
+        guard var tweet = cell.tweet else {
             return
         }
         
         var likes = tweet.likes
         likes = tweet.didLike ? likes - 1 : likes + 1
         tweet.likes = likes
-        tweets.first(where: { $0.tweetId == tweet.tweetId })?.likes = likes
+        if var tweet = tweets.first(where: { $0.tweetId == tweet.tweetId }) {
+            tweet.likes = likes
+        }
         
         TweetService.shared.like(tweet) { (err, ref) in
             if let _ = err {
@@ -172,7 +174,7 @@ extension FeedController: TweetCellDelegate {
     }
     
     func replyButtonTapped(at cell: TweetViewCell) {
-        guard let tweet = cell.tweet else {
+        guard var tweet = cell.tweet else {
             return
         }
         

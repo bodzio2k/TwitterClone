@@ -143,7 +143,9 @@ struct TweetService {
         Globals.userLikes.child(user.uid).observe(.childAdded) { (snapshot) in
             let tweetId = snapshot.key
             
-            self.fetchTweet(with: tweetId) { (tweet) in
+            self.fetchTweet(with: tweetId) { (fetchedTweet) in
+                var tweet = fetchedTweet
+                
                 tweet.didLike = true
                 tweets.append(tweet)
                 

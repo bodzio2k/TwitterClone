@@ -14,7 +14,7 @@ class TweetController: RootViewController {
     let cellIdentifier = "cellTweet"
     let headerIdentifer = "TweetHeader"
     var replies = Array<Tweet>()
-    private let tweet: Tweet
+    private var tweet: Tweet
     private lazy var actionSheetLauncher = ActionSheetLauncher(for: tweet.author)
     
     //MARK: Lifecycle
@@ -146,7 +146,7 @@ extension TweetController: TweetHeaderViewDelegate {
     }
     
     func likeButtonTapped(at headerView: TweetHeaderView) {
-        guard let tweet = headerView.tweet else {
+        guard var tweet = headerView.tweet else {
             return
         }
         
@@ -219,7 +219,7 @@ extension TweetController: ActionSheetLauncherDelegate {
 
 extension TweetController: TweetCellDelegate {
     func likeButtonTapped(at cell: TweetViewCell) {
-        guard let tweet = cell.tweet else {
+        guard var tweet = cell.tweet else {
             return
         }
         
@@ -234,7 +234,7 @@ extension TweetController: TweetCellDelegate {
     }
     
     func replyButtonTapped(at cell: TweetViewCell) {
-        guard let tweet = cell.tweet else {
+        guard var tweet = cell.tweet else {
             return
         }
         
