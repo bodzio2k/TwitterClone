@@ -149,25 +149,26 @@ extension FeedController: TweetCellDelegate {
     }
     
     func likeButtonTapped(at cell: TweetViewCell) {
-        guard var tweet = cell.tweet else {
+        guard var cellTweet = cell.tweet else {
             return
         }
         
-        var likes = tweet.likes
-        likes = tweet.didLike ? likes - 1 : likes + 1
-        tweet.likes = likes
-        if var tweet = tweets.first(where: { $0.tweetId == tweet.tweetId }) {
-            tweet.likes = likes
+        var likes = cellTweet.likes
+        likes = cellTweet.didLike ? likes - 1 : likes + 1
+        cellTweet.likes = likes
+        
+        if let indexInFeed = tweets.firstIndex(where: { $0.tweetId == cellTweet.tweetId }) {
+            tweets[indexInFeed] = cellTweet
         }
         
-        TweetService.shared.like(tweet) { (err, ref) in
+        TweetService.shared.like(cellTweet) { (err, ref) in
             if let _ = err {
                 return
             }
             
             cell.tweet?.didLike.toggle()
             cell.tweet?.likes = likes
-            cell.configure(for: tweet)
+            cell.configure(for: cellTweet)
             
             self.checkUserLikes(completion: nil)
         }
