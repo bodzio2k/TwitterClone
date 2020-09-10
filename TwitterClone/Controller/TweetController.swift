@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol TweetControllerDelegate: class {
+    func refrechTweet(id: String)
+}
+
 class TweetController: RootViewController {
     //MARK: Properties
     var repliesCollectionView: UICollectionView!
@@ -16,6 +20,7 @@ class TweetController: RootViewController {
     var replies = Array<Tweet>()
     private var tweet: Tweet
     private lazy var actionSheetLauncher = ActionSheetLauncher(for: tweet.author)
+    weak var delegate: TweetControllerDelegate?
     
     //MARK: Lifecycle
     init(tweet: Tweet) {
@@ -33,6 +38,14 @@ class TweetController: RootViewController {
     override func viewWillAppear(_ animated: Bool) {
         navigationController?.navigationBar.isHidden = false
         navigationController?.navigationBar.barStyle = .default
+    }
+    
+    override func didMove(toParent parent: UIViewController?) {
+        super.didMove(toParent: parent)
+        
+        if parent == nil {
+            delegate?.refrechTweet(id: tweet.tweetId)
+        }
     }
     
     //MARK: API Calls

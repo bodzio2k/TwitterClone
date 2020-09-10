@@ -59,6 +59,14 @@ class FeedController: RootViewController {
         }
     }
     
+    func fetchTweet(with tweetId: String) -> Void {
+        if let index = tweets.firstIndex(where: {$0.tweetId == tweetId}) {
+            TweetService.shared.fetchTweet(with: tweetId) { (tweet) in
+                self.tweets[index] = tweet
+            }
+        }
+    }
+    
     fileprivate func checkUserLikes(completion: (() -> Void)?) {
         tweets.forEach { (tweet) in
             TweetService.shared.checkIfUserLikes(tweet) { (didLike) in
@@ -117,6 +125,7 @@ extension FeedController: UICollectionViewDataSource {
         let tweet = tweets[indexPath.row]
         let tweetController = TweetController(tweet: tweet)
         
+        tweetController.delegate = self
         navigationController?.pushViewController(tweetController, animated: true)
     }
     
@@ -195,5 +204,11 @@ extension FeedController: TweetCellDelegate {
         let profileController = ProfileController(user: user)
         
         navigationController?.pushViewController(profileController, animated: true)
+    }
+}
+
+extension FeedController: TweetControllerDelegate {
+    func refrechTweet(id: String) {
+        fetchTweet(with: id)
     }
 }
