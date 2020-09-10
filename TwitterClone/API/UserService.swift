@@ -120,7 +120,9 @@ class UserService {
         }
         
         let userData = ["username": user.username, "fullname": user.fullname, "bio": user.bio ?? ""]
-        Globals.users.child(uid).updateChildValues(userData, withCompletionBlock: completion)
+        Globals.users.child(uid).updateChildValues(userData)
+        Globals.usernames.updateChildValues([user.username : uid])
+        completion(nil, nil)
     }
     
     func updateProfilePhoto(with image: UIImage, completion: @escaping (URL) -> Void) -> Void {
