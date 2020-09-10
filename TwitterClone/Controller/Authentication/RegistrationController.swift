@@ -164,8 +164,10 @@ class RegistrationController: UIViewController {
                 return
             }
             
-            mainController.authenicateAndConfigureUI()
-            
+            mainController.authenicateAndConfigureUI {
+                mainController.selectedIndex = 1
+            }
+           
             self.dismiss(animated: true, completion: nil)
         }
     }

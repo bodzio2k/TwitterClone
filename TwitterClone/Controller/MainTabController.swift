@@ -48,11 +48,11 @@ class MainTabController: UITabBarController {
        
         //try? Auth.auth().signOut()
             
-        authenicateAndConfigureUI()
+        authenicateAndConfigureUI(nil)
     }
     
     //MARK: -API
-    func authenicateAndConfigureUI() {
+    func authenicateAndConfigureUI(_ completion: (() -> Void)?) {
         let isLoggedIn = Auth.auth().currentUser != nil
         
         if !isLoggedIn {
@@ -80,7 +80,7 @@ class MainTabController: UITabBarController {
                     
                     vc.currentUser = user
                     
-                    return
+                    completion?()
                 }
             }
         }
