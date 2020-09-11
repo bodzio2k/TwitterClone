@@ -30,7 +30,7 @@ class EditProfileViewCell: UITableViewCell {
         tf.font = UIFont.systemFont(ofSize: 16.0)
         tf.textColor = .twitterBlue
         tf.placeholder = "text field"
-        tf.addTarget(self, action: #selector(editChanged), for: .editingDidEnd)
+        tf.addTarget(self, action: #selector(editChanged), for: .editingChanged)
         
         return tf
     }()
@@ -39,6 +39,7 @@ class EditProfileViewCell: UITableViewCell {
         
         tv.font = UIFont.systemFont(ofSize: 16.0)
         tv.textColor = .twitterBlue
+        tv.delegate = self
         
         return tv
     }()
@@ -68,8 +69,6 @@ class EditProfileViewCell: UITableViewCell {
         
         addSubview(bioPlaceHolderLabel)
         bioPlaceHolderLabel.anchor(top: topAnchor, left: titleLabel.rightAnchor, paddingTop: 12.0, paddingLeft: 8.00)
-        
-        NotificationCenter.default.addObserver(self, selector: #selector(editChanged), name: UITextView.textDidEndEditingNotification, object: nil)
     }
     
     required init?(coder: NSCoder) {
@@ -96,6 +95,12 @@ class EditProfileViewCell: UITableViewCell {
     
     //MARK: Selectors
     @objc func editChanged() {
+        delegate?.editChanged(self)
+    }
+}
+
+extension EditProfileViewCell: UITextViewDelegate {
+    func textViewDidChange(_ textView: UITextView) {
         delegate?.editChanged(self)
     }
 }
