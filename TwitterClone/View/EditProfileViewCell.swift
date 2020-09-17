@@ -101,6 +101,12 @@ class EditProfileViewCell: UITableViewCell {
 
 extension EditProfileViewCell: UITextViewDelegate {
     func textViewDidChange(_ textView: UITextView) {
+        if var user = self.user {
+            user.bio = textView.text
+            
+            configure(field: .bio, user: user)
+        }
+        
         delegate?.editChanged(self)
     }
 }

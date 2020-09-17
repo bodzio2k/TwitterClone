@@ -48,6 +48,8 @@ class EditProfileController: RootViewController {
     }()
     weak var delegate: EditProfileControllerDelegate?
     
+    
+    //MARK: Lifecycle
     init(user: User) {
         self.user = user
         
@@ -96,6 +98,7 @@ class EditProfileController: RootViewController {
         navigationItem.rightBarButtonItem?.isEnabled = false
     }
     
+    //MARK: Helpers
     func configureTableView() {
         headerView.frame = CGRect(x: 0.0, y: 0.0, width: self.view.frame.width, height: 180.0)
         headerView.delegate = self
