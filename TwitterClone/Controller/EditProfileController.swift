@@ -9,7 +9,7 @@
 import UIKit
 
 protocol EditProfileControllerDelegate: class {
-    func controller(_ controller: EditProfileController, updates user: User)
+    func controller(_ controller: RootViewController, updates user: User)
 }
 
 class EditProfileController: RootViewController {

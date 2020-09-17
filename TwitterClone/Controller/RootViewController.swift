@@ -14,7 +14,7 @@ import Firebase
     @objc func logout(_ controller: RootViewController) -> Void
 }
 
-class RootViewController: UIViewController {
+class RootViewController: UIViewController, EditProfileControllerDelegate {
     var navigationItemView: UIView?
     var navigationItemTitle: String?
     lazy var profiePhotoImageView: UIImageView = {
@@ -33,6 +33,7 @@ class RootViewController: UIViewController {
     }()
     
     weak var logoutDelegate: LogoutDelegate?
+    
     var currentUser: User? {
         didSet {
             guard let newValue = currentUser else {
@@ -72,6 +73,7 @@ class RootViewController: UIViewController {
         }
         
         let controller = EditProfileController(user: user)
+        controller.delegate = self
         
         let nav = UINavigationController(rootViewController: controller)
         
@@ -79,6 +81,16 @@ class RootViewController: UIViewController {
         nav.navigationBar.barStyle = .black
         
         present(nav, animated: true)
+    }
+    
+    func controller(_ controller: RootViewController, updates user: User) {
+        if let mainTabBarController = getKeyWindow().rootViewController as? MainTabController {
+            mainTabBarController.viewControllers?.forEach({ (vc) in
+                if let nav = vc as? UINavigationController, let vc = nav.viewControllers.first, let rootVc = vc as? RootViewController  {
+                    rootVc.currentUser = user
+                }
+            })
+        }
     }
 }
 
@@ -89,7 +101,6 @@ extension RootViewController: LogoutDelegate {
         guard let keyWindow = UIApplication.shared.windows.first(where: {$0.isKeyWindow}), let rootViewController = keyWindow.rootViewController else {
                 return
         }
-        
         
         alert.addAction(UIAlertAction(title: "Logout", style: .destructive, handler: { (_) in
             controller.dismiss(animated: true) {

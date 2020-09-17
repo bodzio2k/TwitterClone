@@ -116,6 +116,12 @@ class ProfileController: RootViewController {
             self.replies = replies
         }
     }
+    
+    override func controller(_ controller: RootViewController, updates user: User) {
+        self.user = user
+        
+        tweetsCollectionView.reloadData()
+    }
 }
 
 extension ProfileController: UICollectionViewDataSource {
@@ -217,12 +223,5 @@ extension ProfileController: ProfileHeaderViewDelegate {
         navigationController?.navigationBar.barStyle = .default
         
         navigationController?.popViewController(animated: true)
-    }
-}
-
-extension ProfileController: EditProfileControllerDelegate {
-    func controller(_ controller: EditProfileController, updates user: User) {
-        self.user = user
-        self.tweetsCollectionView.reloadData()
     }
 }
