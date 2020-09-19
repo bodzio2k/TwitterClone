@@ -9,8 +9,15 @@
 import UIKit
 import Firebase
 
+enum ActionButtonConfiguration {
+    case newTweet
+    case newDirectMessage
+}
+
 class MainTabController: UITabBarController {
-    //MARK: -Properties
+    //MARK: Properties
+    let actionButtonConfig: ActionButtonConfiguration = .newTweet
+    
     let actionButton: UIButton = {
         let button = UIButton(type: .system)
         
@@ -23,7 +30,7 @@ class MainTabController: UITabBarController {
         return button
     }()
     
-    //MARK: -Selectors
+    //MARK: Selectors
     @objc func actionButtonTapped() {
         guard let nav = selectedViewController as? UINavigationController else {
             return
@@ -42,16 +49,18 @@ class MainTabController: UITabBarController {
         present(newNavStack, animated: true)
     }
     
-    //MARK: -Lifecycle
+    //MARK: Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
-       
+        
+        delegate = self
+        
         //try? Auth.auth().signOut()
             
         authenicateAndConfigureUI(nil)
     }
     
-    //MARK: -API
+    //MARK: API
     func authenicateAndConfigureUI(_ completion: (() -> Void)?) {
         let isLoggedIn = Auth.auth().currentUser != nil
         
@@ -85,7 +94,7 @@ class MainTabController: UITabBarController {
             }
         }
     }
-    //MARK: -Helpers
+    //MARK: Helpers
     func configureControllers() {
         let nav1 = templateNavigationController(rootViewControler: FeedController(), image: UIImage(systemName: "house"))
         let nav2 = templateNavigationController(rootViewControler: ExploreController(), image: UIImage(systemName: "number"))
@@ -107,5 +116,15 @@ class MainTabController: UITabBarController {
         view.addSubview(actionButton)
         
         actionButton.anchor(bottom: view.safeAreaLayoutGuide.bottomAnchor, right: view.rightAnchor, paddingBottom: 64, paddingRight: 16, width: 56, height: 56)
+    }
+}
+
+extension MainTabController: UITabBarControllerDelegate {
+    func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        let index = viewControllers?.firstIndex(of: viewController)
+        
+        let actionButtonImage = index != 3 ? UIImage(systemName: "pencil") : UIImage(systemName: "envelope")
+        
+        actionButton.setImage(actionButtonImage, for: .normal)
     }
 }
